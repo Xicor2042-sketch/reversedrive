@@ -130,12 +130,6 @@ function RegisterPage() {
       </div>
 
       <div className="relative w-full max-w-[440px]">
-        <Link href="/" className="mb-6 block text-center">
-          <span className="text-xl tracking-tight" style={{ fontWeight: 510 }}>
-            Reverse<span className="text-[#7170ff]">Drive</span>
-          </span>
-        </Link>
-
         <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
           <div className="mb-6">
             <h1
