@@ -130,7 +130,7 @@ function RegisterPage() {
       </div>
 
       <div className="relative w-full max-w-[440px]">
-        <Link href="/" className="mb-8 block text-center">
+        <Link href="/" className="mb-6 block text-center">
           <span className="text-xl tracking-tight" style={{ fontWeight: 510 }}>
             Reverse<span className="text-[#7170ff]">Drive</span>
           </span>
@@ -275,11 +275,11 @@ function RegisterPage() {
           </div>
 
           <div className="relative my-6 flex items-center gap-3">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-            <span className="text-[12px] text-[#62666d]" style={{ fontWeight: 510 }}>
-              or
+            <div className="h-px flex-1 bg-white/[0.12]" />
+            <span className="text-[12px] text-[#8a8f98]" style={{ fontWeight: 510 }}>
+              or use email
             </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+            <div className="h-px flex-1 bg-white/[0.12]" />
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4">
@@ -378,6 +378,13 @@ function RegisterPage() {
         </div>
 
         <p className="mt-8 text-center text-[13px] text-[#8a8f98]">
+          By creating an account, you agree to our{" "}
+          <Link href="/terms" className="text-[#7170ff] hover:text-[#828fff]" style={{ fontWeight: 510 }}>Terms</Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="text-[#7170ff] hover:text-[#828fff]" style={{ fontWeight: 510 }}>Privacy Policy</Link>.
+        </p>
+
+        <p className="mt-4 text-center text-[13px] text-[#8a8f98]">
           Already have an account?{" "}
           <Link
             href="/login"

@@ -129,9 +129,9 @@ export default function LandingPage() {
 
       {/* Ticker */}
       <section className="border-y border-white/[0.05] bg-white/[0.01] py-4 overflow-hidden">
-        <div className="flex gap-12 animate-scroll whitespace-nowrap">
-          {[...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} className="text-[13px] text-[#62666d] flex items-center gap-3" style={{ fontWeight: 510 }}>
+        <div className="flex animate-scroll whitespace-nowrap">
+          {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
+            <span key={i} className="text-[13px] text-[#62666d] flex items-center gap-3 pr-12" style={{ fontWeight: 510 }}>
               <span className="w-1 h-1 rounded-full bg-[#10b981]" />
               {item}
             </span>
