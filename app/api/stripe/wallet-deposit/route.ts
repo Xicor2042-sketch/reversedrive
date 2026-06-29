@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { handleWalletDeposit } from "@/lib/stripe/payment-handlers"
-import Stripe from "stripe"
+import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
-const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true" || !process.env.STRIPE_SECRET_KEY?.startsWith("sk_")
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not configured')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY)
+}
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || !process.env.STRIPE_SECRET_KEY?.startsWith('sk_')
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ demo: true, success: true })
     }
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
