@@ -285,4 +285,67 @@ create index idx_unlocked_leads_request_id on public.unlocked_leads(request_id);
 create index idx_conversations_buyer_id on public.conversations(buyer_id);
 create index idx_conversations_seller_id on public.conversations(seller_id);
 create index idx_messages_conversation_id on public.messages(conversation_id);
+-- ============================================
+-- TABLE: buyer_wallets (escrow / spending balance)
+-- ============================================
+create table if not exists public.buyer_wallets (
+  id uuid references public.profiles(id) on delete cascade primary key,
+  balance numeric(12,2) not null default 0,
+  currency text not null default 'usd',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- ============================================
+-- TABLE: escrow_transactions
+-- ============================================
+create table if not exists public.escrow_transactions (
+  id uuid not null default gen_random_uuid() primary key,
+  buyer_id uuid references public.profiles(id) on delete cascade not null,
+  seller_id uuid references public.profiles(id) on delete set null,
+  request_id uuid references public.car_requests(id) on delete set null,
+  conversation_id uuid references public.conversations(id) on delete set null,
+  amount numeric(12,2) not null,
+  stripe_payment_intent_id text,
+  status text not null default 'pending' check (status in ('pending', 'funded', 'released', 'refunded')),
+  description text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- ============================================
+-- RLS POLICIES: buyer_wallets
+-- ============================================
+alter table public.buyer_wallets enable row level security;
+
+create policy "Buyers manage own wallet" on public.buyer_wallets
+  for all using (id = auth.uid());
+
+-- ============================================
+-- RLS POLICIES: escrow_transactions
+-- ============================================
+alter table public.escrow_transactions enable row level security;
+
+create policy "Participants see own escrow" on public.escrow_transactions
+  for select using (buyer_id = auth.uid() or seller_id = auth.uid());
+
+create policy "Buyers create own escrow" on public.escrow_transactions
+  for insert with check (buyer_id = auth.uid());
+
+create policy "Participants update own escrow" on public.escrow_transactions
+  for update using (buyer_id = auth.uid() or seller_id = auth.uid());
+
+-- Trigger for updated_at on new tables
+create trigger update_buyer_wallets_updated_at before update on public.buyer_wallets
+  for each row execute function public.update_updated_at();
+
+create trigger update_escrow_transactions_updated_at before update on public.escrow_transactions
+  for each row execute function public.update_updated_at();
+
+-- Indexes
+alter table public.escrow_transactions replica identity full;
+create index idx_buyer_wallets_id on public.buyer_wallets(id);
+create index idx_escrow_buyer_id on public.escrow_transactions(buyer_id);
+create index idx_escrow_seller_id on public.escrow_transactions(seller_id);
+create index idx_escrow_request_id on public.escrow_transactions(request_id);
 create index idx_transactions_seller_id on public.transactions(seller_id);

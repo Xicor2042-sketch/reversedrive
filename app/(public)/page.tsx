@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { ArrowRight, Search, Target, Shield, Zap, TrendingDown, Check } from "lucide-react"
+import { ArrowRight, Target, Shield, Zap, TrendingDown, Check } from "lucide-react"
 
 const tickerItems = [
   "2021 Toyota Tacoma found in 4 hours",
@@ -42,91 +41,81 @@ const stats = [
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#08090a] text-[#f7f8f8]" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.05] bg-[#08090a]/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="text-[15px] font-medium tracking-tight" style={{ fontWeight: 510 }}>
-            Reverse<span className="text-[#7170ff]">Drive</span>
-          </span>
-          <div className="flex items-center gap-6">
-            <Link href="/login" className="text-[13px] text-[#8a8f98] hover:text-[#f7f8f8] transition-colors" style={{ fontWeight: 510 }}>
-              Log In
-            </Link>
-            <Link href="/register?role=buyer" className="text-[13px] text-white bg-[#5e6ad2] hover:bg-[#7170ff] px-3 py-1.5 rounded-[6px] transition-colors" style={{ fontWeight: 510 }}>
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        {/* Background glow */}
+        {/* Animated background */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#5e6ad2]/10 rounded-full blur-[120px]" />
-          <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-[#7170ff]/5 rounded-full blur-[100px]" />
+          <div
+            className="absolute inset-0 opacity-30 animate-gradient"
+            style={{
+              background: 'radial-gradient(ellipse at 20% 30%, rgba(94, 106, 210, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(113, 112, 255, 0.1) 0%, transparent 50%)',
+            }}
+          />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#5e6ad2]/8 rounded-full blur-[120px] animate-float-1" />
+          <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-[#7170ff]/6 rounded-full blur-[100px] animate-float-2" />
+          <div className="absolute bottom-1/4 left-1/4 w-[250px] h-[250px] bg-[#5e6ad2]/5 rounded-full blur-[90px] animate-float-1" style={{ animationDelay: '3s' }} />
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+            }}
+          />
         </div>
 
         <div className="relative max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.02] mb-8"
-          >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.02] mb-8 animate-fade-in">
             <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
             <span className="text-[12px] text-[#8a8f98]" style={{ fontWeight: 510 }}>Now accepting early access users</span>
-          </motion.div>
+          </div>
 
           {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            className="text-5xl md:text-6xl lg:text-7xl leading-[1.0] tracking-tight"
-            style={{ fontWeight: 510, letterSpacing: '-0.04em' }}
+          <h1
+            className="text-5xl md:text-6xl lg:text-7xl leading-[1.0] tracking-tight animate-fade-in-up"
+            style={{ fontWeight: 510, letterSpacing: "-0.04em", animationDelay: "50ms" }}
           >
             Don&apos;t search.
             <br />
             <span className="text-[#8a8f98]">Let the car</span>
             <br />
-            <span className="text-[#7170ff]">come to you.</span>
-          </motion.h1>
+            <span
+              className="text-transparent bg-clip-text animate-shimmer"
+              style={{
+                backgroundImage: "linear-gradient(90deg, #7170ff, #5e6ad2, #828fff, #5e6ad2, #7170ff)",
+              }}
+            >
+              come to you.
+            </span>
+          </h1>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-8 text-lg md:text-xl text-[#8a8f98] max-w-2xl mx-auto leading-relaxed"
+          <p
+            className="mt-8 text-lg md:text-xl text-[#8a8f98] max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
+            style={{ animationDelay: "100ms" }}
           >
             Post your dream car with your budget. Let sellers compete for your money.
             No scrolling, no haggling, no stress.
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3"
+          <div
+            className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in-up"
+            style={{ animationDelay: "150ms" }}
           >
-            <Link href="/register?role=buyer" className="group inline-flex items-center gap-2 bg-[#5e6ad2] hover:bg-[#7170ff] text-white px-6 py-3 rounded-[8px] text-[14px] transition-all" style={{ fontWeight: 510 }}>
+            <Link href="/register?role=buyer" className="group inline-flex items-center gap-2 bg-[#5e6ad2] hover:bg-[#7170ff] text-white px-6 py-3 rounded-[8px] text-[14px] transition-all animate-pulse-glow" style={{ fontWeight: 510 }}>
               I Want to Buy
               <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
-            <Link href="/register?role=seller" className="inline-flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] text-[#f7f8f8] border border-white/[0.08] px-6 py-3 rounded-[8px] text-[14px] transition-all" style={{ fontWeight: 510 }}>
+            <Link href="/register?role=seller" className="group inline-flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] text-[#f7f8f8] border border-white/[0.08] hover:border-[#5e6ad2]/30 px-6 py-3 rounded-[8px] text-[14px] transition-all hover:shadow-[0_0_20px_rgba(94,106,210,0.15)]" style={{ fontWeight: 510 }}>
               I Want to Sell
             </Link>
-          </motion.div>
+          </div>
 
           {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto"
+          <div
+            className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in"
+            style={{ animationDelay: "300ms" }}
           >
             {stats.map((stat, i) => (
               <div key={i} className="text-center">
@@ -134,7 +123,7 @@ export default function LandingPage() {
                 <div className="text-[12px] text-[#62666d] mt-1" style={{ fontWeight: 510 }}>{stat.label}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -151,7 +140,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-6">
+      <section id="how-it-works" className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: '-0.03em' }}>
@@ -164,20 +153,23 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="rounded-[12px] border border-white/[0.08] bg-white/[0.02] p-6 hover:bg-white/[0.04] transition-all"
+                className="group relative rounded-[12px] border border-white/[0.08] bg-white/[0.02] p-6 hover:bg-white/[0.04] hover:border-[#5e6ad2]/30 transition-all animate-slide-up"
+                style={{ animationDelay: `${i * 120}ms` }}
               >
-                <div className="w-10 h-10 rounded-[8px] bg-[#5e6ad2]/10 border border-[#5e6ad2]/20 flex items-center justify-center mb-5">
-                  <feature.icon size={18} className="text-[#7170ff]" />
+                <div className="absolute inset-0 rounded-[12px] opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-b from-[#5e6ad2]/5 to-transparent pointer-events-none" />
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-[8px] bg-[#5e6ad2]/10 border border-[#5e6ad2]/20 flex items-center justify-center mb-5 group-hover:bg-[#5e6ad2]/15 transition-colors">
+                    <feature.icon size={18} className="text-[#7170ff]" />
+                  </div>
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full border border-white/[0.08] bg-white/[0.03] text-[11px] text-[#7170ff] mb-3" style={{ fontWeight: 510 }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <h3 className="text-lg mb-2" style={{ fontWeight: 510 }}>{feature.title}</h3>
+                  <p className="text-sm text-[#8a8f98] leading-relaxed">{feature.description}</p>
                 </div>
-                <h3 className="text-lg mb-2" style={{ fontWeight: 510 }}>{feature.title}</h3>
-                <p className="text-sm text-[#8a8f98] leading-relaxed">{feature.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -215,7 +207,7 @@ export default function LandingPage() {
             {/* ReverseDrive */}
             <div className="rounded-[12px] border border-[#5e6ad2]/20 bg-[#5e6ad2]/[0.03] p-6">
               <div className="flex items-center gap-2 mb-4 text-[#7170ff]">
-                <Search size={18} />
+                <Check size={18} />
                 <span className="text-sm" style={{ fontWeight: 510 }}>ReverseDrive</span>
               </div>
               <ul className="space-y-3">
@@ -241,31 +233,16 @@ export default function LandingPage() {
             Join the reverse marketplace. Post your request in 60 seconds.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/register?role=buyer" className="inline-flex items-center gap-2 bg-[#5e6ad2] hover:bg-[#7170ff] text-white px-6 py-3 rounded-[8px] text-[14px] transition-all" style={{ fontWeight: 510 }}>
+            <Link href="/register?role=buyer" className="group inline-flex items-center gap-2 bg-[#5e6ad2] hover:bg-[#7170ff] text-white px-6 py-3 rounded-[8px] text-[14px] transition-all animate-pulse-glow" style={{ fontWeight: 510 }}>
               Get Started as a Buyer
-              <ArrowRight size={16} />
+              <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
-            <Link href="/register?role=seller" className="inline-flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] text-[#f7f8f8] border border-white/[0.08] px-6 py-3 rounded-[8px] text-[14px] transition-all" style={{ fontWeight: 510 }}>
+            <Link href="/register?role=seller" className="group inline-flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.06] text-[#f7f8f8] border border-white/[0.08] hover:border-[#5e6ad2]/30 px-6 py-3 rounded-[8px] text-[14px] transition-all hover:shadow-[0_0_20px_rgba(94,106,210,0.15)]" style={{ fontWeight: 510 }}>
               Start Selling
             </Link>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-white/[0.05] py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <span className="text-[15px] font-medium tracking-tight" style={{ fontWeight: 510 }}>
-            Reverse<span className="text-[#7170ff]">Drive</span>
-          </span>
-          <div className="flex items-center gap-6 text-[13px] text-[#62666d]" style={{ fontWeight: 510 }}>
-            <a href="#" className="hover:text-[#f7f8f8] transition-colors">Terms</a>
-            <a href="#" className="hover:text-[#f7f8f8] transition-colors">Privacy</a>
-            <a href="#" className="hover:text-[#f7f8f8] transition-colors">Contact</a>
-          </div>
-          <span className="text-[12px] text-[#62666d]">© 2026 ReverseDrive</span>
-        </div>
-      </footer>
     </div>
   )
 }

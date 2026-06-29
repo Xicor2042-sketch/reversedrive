@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { handleLeadUnlock } from '@/lib/stripe/payment-handlers'
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || !process.env.STRIPE_SECRET_KEY?.startsWith('sk_')
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,7 +21,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Request ID required' }, { status: 400 })
     }
 
-    // Verify the request exists and is active
     const { data: carRequest } = await supabase
       .from('car_requests')
       .select('id, make, model, status')
@@ -30,19 +31,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Lead not available' }, { status: 404 })
     }
 
-    // Check if already unlocked
-    const { data: existing } = await supabase
-      .from('unlocked_leads')
-      .select('id')
-      .eq('request_id', requestId)
-      .eq('seller_id', user.id)
-      .single()
-
-    if (existing) {
-      return NextResponse.json({ error: 'Already unlocked', alreadyUnlocked: true }, { status: 400 })
+    if (DEMO_MODE) {
+      const result = await handleLeadUnlock({
+        sellerId: user.id,
+        requestId,
+        unlockFeeCents: 999,
+      })
+      return NextResponse.json({ demo: true, ...result })
     }
 
-    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -53,7 +50,7 @@ export async function POST(request: NextRequest) {
               name: `Lead Unlock: ${carRequest.make} ${carRequest.model}`,
               description: 'Unlock buyer contact info and start chatting in the Deal Room',
             },
-            unit_amount: 999, // $9.99 in cents
+            unit_amount: 999,
           },
           quantity: 1,
         },
@@ -69,8 +66,8 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json({ url: session.url })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Checkout error:', error)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    return NextResponse.json({ error: error.message || 'Failed to create checkout session' }, { status: 500 })
   }
 }

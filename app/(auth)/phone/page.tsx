@@ -4,11 +4,25 @@ import { useState, type FormEvent, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Loader2, Phone, AlertCircle, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Loader2,
+  Phone,
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  ShieldCheck,
+  MessageSquare,
+} from "lucide-react";
 
 export default function PhoneLoginWrapper() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#08090a]"><Loader2 className="animate-spin text-[#5e6ad2]" size={28} /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#08090a]">
+          <Loader2 className="animate-spin text-[#5e6ad2]" size={28} />
+        </div>
+      }
+    >
       <PhoneLoginPage />
     </Suspense>
   );
@@ -70,7 +84,6 @@ function PhoneLoginPage() {
         return;
       }
 
-      // Get user role and redirect
       if (data.user) {
         const { data: profile } = await supabase
           .from("profiles")
@@ -94,134 +107,185 @@ function PhoneLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-6" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[300px] bg-[#5e6ad2]/8 rounded-full blur-[100px]" />
+    <div
+      className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-4 py-12 antialiased"
+      style={{ fontFeatureSettings: '"cv01", "ss03"' }}
+    >
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 h-[520px] w-[720px] rounded-full bg-[#5e6ad2]/12 blur-[140px]" />
+        <div className="absolute top-1/2 -right-[10%] h-[420px] w-[520px] -translate-y-1/2 rounded-full bg-[#7170ff]/8 blur-[120px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(94,106,210,0.08),transparent_50%)]" />
       </div>
 
-      <div className="relative w-full max-w-sm">
-        <Link href="/" className="block text-center mb-10">
-          <span className="text-xl font-medium tracking-tight" style={{ fontWeight: 510 }}>
+      <div className="relative w-full max-w-[400px]">
+        <Link href="/" className="mb-8 block text-center">
+          <span className="text-xl tracking-tight" style={{ fontWeight: 510 }}>
             Reverse<span className="text-[#7170ff]">Drive</span>
           </span>
         </Link>
 
-        <div className="mb-8">
-          <Link href="/login" className="inline-flex items-center gap-1 text-[13px] text-[#62666d] hover:text-[#f7f8f8] transition-colors mb-4">
-            <ArrowLeft size={14} /> Back to sign in
-          </Link>
-          <h1 className="text-2xl tracking-tight" style={{ fontWeight: 510, letterSpacing: '-0.02em' }}>
-            {step === "phone" ? "Phone Login" : "Enter Code"}
-          </h1>
-          <p className="text-sm text-[#8a8f98] mt-2">
-            {step === "phone"
-              ? "We'll send you a verification code via SMS"
-              : `We sent a 6-digit code to ${phone}`}
-          </p>
-        </div>
-
-        {error && (
-          <div className="mb-6 flex items-start gap-2 rounded-[8px] border border-[#ef4444]/20 bg-[#ef4444]/5 px-4 py-3 text-sm text-[#ef4444]">
-            <AlertCircle size={16} className="shrink-0 mt-0.5" />
-            <span>{error}</span>
+        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
+          <div className="mb-8">
+            <Link
+              href="/login"
+              className="mb-4 inline-flex items-center gap-1.5 text-[13px] text-[#62666d] transition-colors hover:text-[#f7f8f8]"
+              style={{ fontWeight: 510 }}
+            >
+              <ArrowLeft size={14} /> Back to sign in
+            </Link>
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/[0.08] bg-white/[0.03]">
+                {step === "phone" ? (
+                  <MessageSquare size={18} className="text-[#7170ff]" />
+                ) : (
+                  <ShieldCheck size={18} className="text-[#7170ff]" />
+                )}
+              </div>
+              <div>
+                <h1
+                  className="text-[24px] leading-tight tracking-tight"
+                  style={{ fontWeight: 510, letterSpacing: "-0.02em" }}
+                >
+                  {step === "phone" ? "Phone sign in" : "Enter the code"}
+                </h1>
+                <p className="text-[14px] text-[#8a8f98]">
+                  {step === "phone"
+                    ? "We’ll send you a one-time verification code"
+                    : `We texted a code to ${phone}`}
+                </p>
+              </div>
+            </div>
           </div>
-        )}
 
-        {step === "phone" ? (
-          <form onSubmit={handleSendOTP} className="space-y-5">
-            <div>
-              <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
+          <div className="mb-6 flex items-center gap-2">
+            <div
+              className={`h-1.5 flex-1 rounded-full transition-colors ${
+                step === "phone" ? "bg-[#7170ff]" : "bg-[#5e6ad2]"
+              }`}
+            />
+            <div
+              className={`h-1.5 flex-1 rounded-full transition-colors ${
+                step === "otp" ? "bg-[#7170ff]" : "bg-white/[0.06]"
+              }`}
+            />
+          </div>
+
+          {error && (
+            <div className="mb-6 flex items-start gap-2.5 rounded-[10px] border border-[#ef4444]/25 bg-[#ef4444]/8 px-4 py-3 text-[13px] text-[#ef4444]">
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {step === "phone" ? (
+            <form onSubmit={handleSendOTP} className="space-y-4">
+              <div>
+                <label
+                  className="mb-2 block text-[13px] text-[#d0d6e0]"
+                  style={{ fontWeight: 510 }}
+                >
+                  Phone Number
+                </label>
+                <div className="relative">
+                  <Phone
+                    size={16}
+                    className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d]"
+                  />
+                  <input
+                    type="tel"
+                    required
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    disabled={loading}
+                    placeholder="+1 (555) 123-4567"
+                    className="h-11 w-full rounded-[10px] border border-white/[0.08] bg-white/[0.03] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#7170ff]/40 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-[#7170ff]/10 disabled:opacity-50"
+                  />
+                </div>
+                <p className="mt-2 text-[12px] text-[#62666d]">
+                  Include country code (e.g. +1 for US)
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[10px] bg-[#5e6ad2] px-4 text-[14px] text-white shadow-[0_0_24px_-6px_rgba(94,106,210,0.45)] transition-all hover:bg-[#7170ff] hover:shadow-[0_0_28px_-4px_rgba(113,112,255,0.55)] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-60"
+                style={{ fontWeight: 510 }}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Sending code...
+                  </>
+                ) : (
+                  <>
+                    Send Code
+                    <ArrowRight size={16} />
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleVerifyOTP} className="space-y-4">
+              <div>
+                <label
+                  className="mb-2 block text-[13px] text-[#d0d6e0]"
+                  style={{ fontWeight: 510 }}
+                >
+                  Verification Code
+                </label>
                 <input
-                  type="tel"
+                  type="text"
                   required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  maxLength={6}
+                  value={token}
+                  onChange={(e) => setToken(e.target.value.replace(/\D/g, ""))}
                   disabled={loading}
-                  placeholder="+1 (555) 123-4567"
-                  className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
+                  placeholder="123456"
+                  autoFocus
+                  className="h-14 w-full rounded-[10px] border border-white/[0.08] bg-white/[0.03] px-4 text-center text-[22px] tracking-[0.55em] text-[#f7f8f8] placeholder-[#62666d] tabular-nums transition-all focus:border-[#7170ff]/40 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-[#7170ff]/10 disabled:opacity-50"
+                  style={{ fontWeight: 510 }}
                 />
               </div>
-              <p className="text-[11px] text-[#62666d] mt-2">
-                Include country code (e.g. +1 for US)
-              </p>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded-[6px] bg-[#5e6ad2] hover:bg-[#7170ff] py-2.5 text-[14px] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ fontWeight: 510 }}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  Sending code...
-                </>
-              ) : (
-                <>
-                  Send Code
-                  <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleVerifyOTP} className="space-y-5">
-            <div>
-              <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
-                Verification Code
-              </label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                value={token}
-                onChange={(e) => setToken(e.target.value.replace(/\D/g, ""))}
-                disabled={loading}
-                placeholder="123456"
-                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 px-4 text-[20px] text-center text-[#f7f8f8] placeholder-[#62666d] tracking-[0.5em] tabular-nums transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
+              <button
+                type="submit"
+                disabled={loading || token.length !== 6}
+                className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[10px] bg-[#5e6ad2] px-4 text-[14px] text-white shadow-[0_0_24px_-6px_rgba(94,106,210,0.45)] transition-all hover:bg-[#7170ff] hover:shadow-[0_0_28px_-4px_rgba(113,112,255,0.55)] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-60"
                 style={{ fontWeight: 510 }}
-                autoFocus
-              />
-            </div>
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  <>
+                    Verify &; Sign In
+                    <ArrowRight size={16} />
+                  </>
+                )}
+              </button>
 
-            <button
-              type="submit"
-              disabled={loading || token.length !== 6}
-              className="w-full flex items-center justify-center gap-2 rounded-[6px] bg-[#5e6ad2] hover:bg-[#7170ff] py-2.5 text-[14px] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-              style={{ fontWeight: 510 }}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  Verifying...
-                </>
-              ) : (
-                <>
-                  Verify & Sign In
-                  <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setStep("phone")}
-              className="w-full text-center text-[13px] text-[#62666d] hover:text-[#f7f8f8] transition-colors"
-              style={{ fontWeight: 510 }}
-            >
-              Use a different phone number
-            </button>
-          </form>
-        )}
+              <button
+                type="button"
+                onClick={() => setStep("phone")}
+                className="w-full text-center text-[13px] text-[#62666d] transition-colors hover:text-[#f7f8f8]"
+                style={{ fontWeight: 510 }}
+              >
+                Use a different phone number
+              </button>
+            </form>
+          )}
+        </div>
 
         <p className="mt-8 text-center text-[13px] text-[#8a8f98]">
           Prefer another method?{" "}
-          <Link href="/login" className="text-[#7170ff] hover:text-[#828fff] transition-colors" style={{ fontWeight: 510 }}>
+          <Link
+            href="/login"
+            className="text-[#7170ff] transition-colors hover:text-[#828fff]"
+            style={{ fontWeight: 510 }}
+          >
             Sign in with email
           </Link>
         </p>

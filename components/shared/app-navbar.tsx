@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, FileText, MessageSquare, TrendingUp, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, FileText, MessageSquare, TrendingUp, LogOut, Menu, X, Settings as SettingsIcon } from 'lucide-react'
 
 export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin' }) {
   const supabase = createClient()
@@ -80,7 +80,6 @@ export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin'
 
         {/* Right: User menu */}
         <div className="flex items-center gap-3">
-          {/* User avatar / name */}
           <div className="relative hidden md:block">
             <button
               onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -95,6 +94,15 @@ export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin'
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                 <div className="absolute right-0 mt-2 w-48 rounded-[8px] border border-white/[0.08] bg-[#191a1b] shadow-xl z-50 overflow-hidden">
+                  <Link
+                    href="/settings"
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-[#d0d6e0] hover:bg-white/[0.05] transition-colors"
+                    onClick={() => setUserMenuOpen(false)}
+                    style={{ fontWeight: 510 }}
+                  >
+                    <SettingsIcon size={14} />
+                    Settings
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-[#d0d6e0] hover:bg-white/[0.05] transition-colors"

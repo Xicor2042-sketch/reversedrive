@@ -8,32 +8,23 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/5 bg-[#0D0F14]">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-lg font-bold text-white">
-            Reverse<span className="text-[#3B82F6]">Drive</span>
-          </span>
-        </Link>
-
-        {/* Links */}
-        <div className="flex items-center gap-6">
+    <footer className="border-t border-white/[0.05] bg-[#08090a]">
+      <div className="mx-auto flex max-w-6xl flex-col md:flex-row items-center justify-between gap-6 px-6 py-12">
+        <span className="text-[15px] tracking-tight text-[#f7f8f8]" style={{ fontWeight: 510 }}>
+          Reverse<span className="text-[#7170ff]">Drive</span>
+        </span>
+        <div className="flex items-center gap-6 text-[13px] text-[#62666d]" style={{ fontWeight: 510 }}>
           {footerLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-gray-400 transition-colors hover:text-white"
+              className="hover:text-[#f7f8f8] transition-colors"
             >
               {link.label}
             </Link>
           ))}
         </div>
-
-        {/* Copyright */}
-        <p className="text-sm text-gray-500">
-          © {new Date().getFullYear()} ReverseDrive. All rights reserved.
-        </p>
+        <span className="text-[12px] text-[#62666d]">© {new Date().getFullYear()} ReverseDrive</span>
       </div>
     </footer>
   );

@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
-      const { seller_id, request_id, type } = session.metadata || {}
+      const { seller_id, request_id, buyer_id, type } = session.metadata || {}
 
       if (type === 'lead_unlock' && seller_id && request_id) {
         // Create unlock record
@@ -76,6 +76,34 @@ export async function POST(request: NextRequest) {
           status: 'completed',
           related_request_id: request_id,
         })
+      } else if (type === 'wallet_deposit' && buyer_id) {
+        const amount = Number(session.metadata?.amount_cents || 0) / 100
+        if (amount > 0) {
+          // Upsert wallet row with balance increment
+          const { data: wallet } = await supabase
+            .from('buyer_wallets')
+            .select('balance')
+            .eq('id', buyer_id)
+            .single()
+
+          const newBalance = (wallet?.balance || 0) + amount
+          const { error: walletError } = await supabase
+            .from('buyer_wallets')
+            .upsert({ id: buyer_id, balance: newBalance }, { onConflict: 'id' })
+
+          if (walletError) {
+            console.error('Failed to update wallet:', walletError)
+            break
+          }
+
+          await supabase.from('escrow_transactions').insert({
+            buyer_id,
+            amount,
+            stripe_payment_intent_id: session.payment_intent as string,
+            status: 'funded',
+            description: 'Wallet deposit',
+          })
+        }
       }
       break
     }

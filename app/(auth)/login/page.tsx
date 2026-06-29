@@ -73,136 +73,169 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-6" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[300px] bg-[#5e6ad2]/8 rounded-full blur-[100px]" />
+    <div
+      className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-4 py-12 antialiased"
+      style={{ fontFeatureSettings: '"cv01", "ss03"' }}
+    >
+      {/* Ambient background glow */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 h-[520px] w-[720px] rounded-full bg-[#5e6ad2]/12 blur-[140px]" />
+        <div className="absolute top-1/2 -right-[10%] h-[420px] w-[520px] -translate-y-1/2 rounded-full bg-[#7170ff]/8 blur-[120px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(94,106,210,0.08),transparent_50%)]" />
       </div>
 
-      <div className="relative w-full max-w-sm">
-        <Link href="/" className="block text-center mb-10">
-          <span className="text-xl font-medium tracking-tight" style={{ fontWeight: 510 }}>
+      <div className="relative w-full max-w-[400px]">
+        <Link href="/" className="mb-8 block text-center">
+          <span className="text-xl tracking-tight" style={{ fontWeight: 510 }}>
             Reverse<span className="text-[#7170ff]">Drive</span>
           </span>
         </Link>
 
-        <div className="mb-8">
-          <h1 className="text-2xl tracking-tight" style={{ fontWeight: 510, letterSpacing: '-0.02em' }}>
-            Welcome back
-          </h1>
-          <p className="text-sm text-[#8a8f98] mt-2">Sign in to your account</p>
-        </div>
-
-        {error && (
-          <div className="mb-6 flex items-start gap-2 rounded-[8px] border border-[#ef4444]/20 bg-[#ef4444]/5 px-4 py-3 text-sm text-[#ef4444]">
-            <AlertCircle size={16} className="shrink-0 mt-0.5" />
-            <span>{error}</span>
+        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
+          <div className="mb-8">
+            <h1
+              className="text-[26px] leading-tight tracking-tight"
+              style={{ fontWeight: 510, letterSpacing: "-0.02em" }}
+            >
+              Welcome back
+            </h1>
+            <p className="mt-2 text-[15px] text-[#8a8f98]">
+              Sign in to continue your journey
+            </p>
           </div>
-        )}
 
-        {/* OAuth buttons */}
-        <div className="space-y-2 mb-6">
-          <button
-            onClick={() => handleOAuth("google")}
-            disabled={oauthLoading !== null}
-            className="w-full flex items-center justify-center gap-3 rounded-[6px] border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] py-2.5 text-[14px] text-[#f7f8f8] transition-all disabled:opacity-50"
-            style={{ fontWeight: 510 }}
-          >
-            {oauthLoading === "google" ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <GoogleIcon />
-            )}
-            Continue with Google
-          </button>
-
-          <button
-            onClick={() => handleOAuth("apple")}
-            disabled={oauthLoading !== null}
-            className="w-full flex items-center justify-center gap-3 rounded-[6px] border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] py-2.5 text-[14px] text-[#f7f8f8] transition-all disabled:opacity-50"
-            style={{ fontWeight: 510 }}
-          >
-            {oauthLoading === "apple" ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : (
-              <AppleIcon />
-            )}
-            Continue with Apple
-          </button>
-
-          <button
-            onClick={handlePhone}
-            disabled={oauthLoading !== null}
-            className="w-full flex items-center justify-center gap-3 rounded-[6px] border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] py-2.5 text-[14px] text-[#f7f8f8] transition-all disabled:opacity-50"
-            style={{ fontWeight: 510 }}
-          >
-            <Phone size={16} className="text-[#8a8f98]" />
-            Continue with Phone
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex-1 h-px bg-white/[0.06]" />
-          <span className="text-[12px] text-[#62666d]" style={{ fontWeight: 510 }}>or</span>
-          <div className="flex-1 h-px bg-white/[0.06]" />
-        </div>
-
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>Email</label>
-            <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                placeholder="you@example.com"
-                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
-              />
+          {error && (
+            <div className="mb-6 flex items-start gap-2.5 rounded-[10px] border border-[#ef4444]/25 bg-[#ef4444]/8 px-4 py-3 text-[13px] text-[#ef4444]">
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <span>{error}</span>
             </div>
-          </div>
+          )}
 
-          <div>
-            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>Password</label>
-            <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-                placeholder="••••••••"
-                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 rounded-[6px] bg-[#5e6ad2] hover:bg-[#7170ff] py-2.5 text-[14px] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-            style={{ fontWeight: 510 }}
-          >
-            {loading ? (
-              <>
+          <div className="grid gap-2.5">
+            <button
+              onClick={() => handleOAuth("google")}
+              disabled={oauthLoading !== null}
+              className="group flex h-11 w-full items-center justify-center gap-3 rounded-[10px] border border-white/[0.08] bg-white/[0.03] px-4 text-[14px] text-[#f7f8f8] transition-all hover:border-white/[0.12] hover:bg-white/[0.06] active:scale-[0.995] disabled:opacity-50"
+              style={{ fontWeight: 510 }}
+            >
+              {oauthLoading === "google" ? (
                 <Loader2 size={16} className="animate-spin" />
-                Signing in...
-              </>
-            ) : (
-              <>
-                Sign In
-                <ArrowRight size={16} />
-              </>
-            )}
-          </button>
-        </form>
+              ) : (
+                <GoogleIcon />
+              )}
+              Continue with Google
+            </button>
+
+            <button
+              onClick={() => handleOAuth("apple")}
+              disabled={oauthLoading !== null}
+              className="group flex h-11 w-full items-center justify-center gap-3 rounded-[10px] border border-white/[0.08] bg-white/[0.03] px-4 text-[14px] text-[#f7f8f8] transition-all hover:border-white/[0.12] hover:bg-white/[0.06] active:scale-[0.995] disabled:opacity-50"
+              style={{ fontWeight: 510 }}
+            >
+              {oauthLoading === "apple" ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <AppleIcon />
+              )}
+              Continue with Apple
+            </button>
+
+            <button
+              onClick={handlePhone}
+              disabled={oauthLoading !== null}
+              className="group flex h-11 w-full items-center justify-center gap-3 rounded-[10px] border border-white/[0.08] bg-white/[0.03] px-4 text-[14px] text-[#f7f8f8] transition-all hover:border-white/[0.12] hover:bg-white/[0.06] active:scale-[0.995] disabled:opacity-50"
+              style={{ fontWeight: 510 }}
+            >
+              <Phone size={16} className="text-[#8a8f98] transition-colors group-hover:text-[#f7f8f8]" />
+              Continue with Phone
+            </button>
+          </div>
+
+          <div className="relative my-6 flex items-center gap-3">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+            <span className="text-[12px] text-[#62666d]" style={{ fontWeight: 510 }}>
+              or
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label
+                className="mb-2 block text-[13px] text-[#d0d6e0]"
+                style={{ fontWeight: 510 }}
+              >
+                Email
+              </label>
+              <div className="relative">
+                <Mail
+                  size={16}
+                  className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d]"
+                />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  placeholder="you@example.com"
+                  className="h-11 w-full rounded-[10px] border border-white/[0.08] bg-white/[0.03] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#7170ff]/40 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-[#7170ff]/10 disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                className="mb-2 block text-[13px] text-[#d0d6e0]"
+                style={{ fontWeight: 510 }}
+              >
+                Password
+              </label>
+              <div className="relative">
+                <Lock
+                  size={16}
+                  className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d]"
+                />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                  placeholder="••••••••"
+                  className="h-11 w-full rounded-[10px] border border-white/[0.08] bg-white/[0.03] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#7170ff]/40 focus:bg-white/[0.05] focus:outline-none focus:ring-2 focus:ring-[#7170ff]/10 disabled:opacity-50"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-[10px] bg-[#5e6ad2] px-4 text-[14px] text-white shadow-[0_0_24px_-6px_rgba(94,106,210,0.45)] transition-all hover:bg-[#7170ff] hover:shadow-[0_0_28px_-4px_rgba(113,112,255,0.55)] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-60"
+              style={{ fontWeight: 510 }}
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  Sign In
+                  <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
 
         <p className="mt-8 text-center text-[13px] text-[#8a8f98]">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-[#7170ff] hover:text-[#828fff] transition-colors" style={{ fontWeight: 510 }}>
+          <Link
+            href="/register"
+            className="text-[#7170ff] transition-colors hover:text-[#828fff]"
+            style={{ fontWeight: 510 }}
+          >
             Sign up
           </Link>
         </p>
