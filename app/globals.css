@@ -297,3 +297,39 @@ input[type="range"]::-moz-range-thumb {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ---- Scrolling ticker animation ---- */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* ---- Font feature settings for Inter (Linear-style) ---- */
+body {
+  font-feature-settings: "cv01", "ss03";
+}
+
+/* ---- Smooth scrollbar styling ---- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ---- Selection ---- */
+::selection {
+  background: rgba(94, 106, 210, 0.3);
+  color: #f7f8f8;
+}

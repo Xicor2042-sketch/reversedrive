@@ -3,10 +3,8 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils/cn";
-import { Loader2, Mail, Lock, AlertCircle } from "lucide-react";
+import { Loader2, Mail, Lock, AlertCircle, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -23,11 +21,10 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
       if (signInError) {
         setError(signInError.message);
@@ -35,20 +32,15 @@ export default function LoginPage() {
         return;
       }
 
-      // Fetch the user's profile to determine role-based redirect
-      const userId = data.user?.id;
-      if (userId) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", userId)
-          .single();
+      // Get user role and redirect accordingly
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
 
-        if (profile?.role === "seller") {
-          router.push("/leads");
-        } else {
-          router.push("/dashboard");
-        }
+      if (profile?.role === "seller") {
+        router.push("/leads");
       } else {
         router.push("/dashboard");
       }
@@ -60,125 +52,104 @@ export default function LoginPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="glass-strong rounded-2xl p-8 shadow-2xl">
+    <div className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-6" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
+      {/* Background glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[300px] bg-[#5e6ad2]/8 rounded-full blur-[100px]" />
+      </div>
+
+      <div className="relative w-full max-w-sm">
+        {/* Logo */}
+        <Link href="/" className="block text-center mb-10">
+          <span className="text-xl font-medium tracking-tight" style={{ fontWeight: 510 }}>
+            Reverse<span className="text-[#7170ff]">Drive</span>
+          </span>
+        </Link>
+
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-          <p className="mt-2 text-sm text-gray-400">
-            Sign in to your ReverseDrive account
+        <div className="mb-8">
+          <h1 className="text-2xl tracking-tight" style={{ fontWeight: 510, letterSpacing: '-0.02em' }}>
+            Welcome back
+          </h1>
+          <p className="text-sm text-[#8a8f98] mt-2">
+            Sign in to your account
           </p>
         </div>
 
-        {/* Error message */}
+        {/* Error */}
         {error && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            className="mb-6 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400"
-          >
-            <AlertCircle size={16} className="shrink-0" />
-            {error}
-          </motion.div>
+          <div className="mb-6 flex items-start gap-2 rounded-[8px] border border-[#ef4444]/20 bg-[#ef4444]/5 px-4 py-3 text-sm text-[#ef4444]">
+            <AlertCircle size={16} className="shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </div>
         )}
 
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-5">
-          {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-medium text-gray-300"
-            >
+            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
               Email
             </label>
             <div className="relative">
-              <Mail
-                size={18}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-              />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
               <input
-                id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
                 placeholder="you@example.com"
-                className={cn(
-                  "w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-gray-500",
-                  "transition-all focus:border-[#3B82F6]/50 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20",
-                  "disabled:opacity-50"
-                )}
+                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
               />
             </div>
           </div>
 
-          {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-gray-300"
-            >
+            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
               Password
             </label>
             <div className="relative">
-              <Lock
-                size={18}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-              />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
               <input
-                id="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
                 placeholder="••••••••"
-                className={cn(
-                  "w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-gray-500",
-                  "transition-all focus:border-[#3B82F6]/50 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20",
-                  "disabled:opacity-50"
-                )}
+                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
               />
             </div>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl bg-[#3B82F6] py-3 font-semibold text-white",
-              "glow-blue transition-all hover:bg-[#2563EB] disabled:cursor-not-allowed disabled:opacity-60"
-            )}
+            className="w-full flex items-center justify-center gap-2 rounded-[6px] bg-[#5e6ad2] hover:bg-[#7170ff] py-2.5 text-[14px] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ fontWeight: 510 }}
           >
             {loading ? (
               <>
-                <Loader2 size={20} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
                 Signing in...
               </>
             ) : (
-              "Sign In"
+              <>
+                Sign In
+                <ArrowRight size={16} />
+              </>
             )}
           </button>
         </form>
 
-        {/* Register link */}
-        <p className="mt-6 text-center text-sm text-gray-400">
+        {/* Sign up link */}
+        <p className="mt-8 text-center text-[13px] text-[#8a8f98]">
           Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="font-semibold text-[#3B82F6] transition-colors hover:text-[#60A5FA]"
-          >
+          <Link href="/register" className="text-[#7170ff] hover:text-[#828fff] transition-colors" style={{ fontWeight: 510 }}>
             Sign up
           </Link>
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

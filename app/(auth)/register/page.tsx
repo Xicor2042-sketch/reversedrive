@@ -5,14 +5,13 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
-import { cn } from "@/lib/utils/cn";
-import { Loader2, Mail, Lock, User, AlertCircle, Store } from "lucide-react";
+import { Loader2, Mail, Lock, User, AlertCircle, Store, ArrowRight } from "lucide-react";
 
 type Role = "buyer" | "seller";
 
 export default function RegisterPageWrapper() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#0D0F14]"><Loader2 className="animate-spin text-[#3B82F6]" size={32} /></div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-[#08090a]"><Loader2 className="animate-spin text-[#5e6ad2]" size={28} /></div>}>
       <RegisterPage />
     </Suspense>
   );
@@ -23,9 +22,7 @@ function RegisterPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Read role from URL search params (?role=buyer or ?role=seller)
-  const initialRole: Role =
-    searchParams.get("role") === "seller" ? "seller" : "buyer";
+  const initialRole: Role = searchParams.get("role") === "seller" ? "seller" : "buyer";
 
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,15 +56,11 @@ function RegisterPage() {
         return;
       }
 
-      // If email confirmation is required, data.user exists but no session.
-      // If no confirmation required, a session is created immediately.
       if (data.user && !data.session) {
-        // Email confirmation required — redirect to login with a note
         router.push("/login?message=check-email");
         return;
       }
 
-      // Session is active — role-based redirect
       if (role === "seller") {
         router.push("/leads");
       } else {
@@ -81,91 +74,98 @@ function RegisterPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="glass-strong rounded-2xl p-8 shadow-2xl">
+    <div className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-6 py-12" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
+      {/* Background glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[300px] bg-[#5e6ad2]/8 rounded-full blur-[100px]" />
+      </div>
+
+      <div className="relative w-full max-w-sm">
+        {/* Logo */}
+        <Link href="/" className="block text-center mb-10">
+          <span className="text-xl font-medium tracking-tight" style={{ fontWeight: 510 }}>
+            Reverse<span className="text-[#7170ff]">Drive</span>
+          </span>
+        </Link>
+
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-white">Create your account</h1>
-          <p className="mt-2 text-sm text-gray-400">
+        <div className="mb-8">
+          <h1 className="text-2xl tracking-tight" style={{ fontWeight: 510, letterSpacing: '-0.02em' }}>
+            Create your account
+          </h1>
+          <p className="text-sm text-[#8a8f98] mt-2">
             Join the reverse car marketplace
           </p>
         </div>
 
         {/* Role toggle */}
         <div className="mb-6">
-          <label className="mb-2 block text-sm font-medium text-gray-300">
+          <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
             I want to
           </label>
-          <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-white/5 p-1.5">
+          <div className="grid grid-cols-2 gap-1 rounded-[8px] border border-white/[0.08] bg-white/[0.02] p-1">
             <button
               type="button"
               onClick={() => setRole("buyer")}
-              className={cn(
-                "rounded-lg py-2.5 text-sm font-semibold transition-all",
+              className={`rounded-[6px] py-2 text-[13px] transition-all ${
                 role === "buyer"
-                  ? "bg-[#3B82F6] text-white glow-blue"
-                  : "text-gray-400 hover:text-white"
-              )}
+                  ? "bg-[#5e6ad2] text-white"
+                  : "text-[#8a8f98] hover:text-[#f7f8f8]"
+              }`}
+              style={{ fontWeight: 510 }}
             >
               Buy a car
             </button>
             <button
               type="button"
               onClick={() => setRole("seller")}
-              className={cn(
-                "rounded-lg py-2.5 text-sm font-semibold transition-all",
+              className={`rounded-[6px] py-2 text-[13px] transition-all ${
                 role === "seller"
-                  ? "bg-[#06B6D4] text-[#0D0F14]"
-                  : "text-gray-400 hover:text-white"
-              )}
+                  ? "bg-[#7170ff] text-white"
+                  : "text-[#8a8f98] hover:text-[#f7f8f8]"
+              }`}
+              style={{ fontWeight: 510 }}
             >
               Sell cars
             </button>
           </div>
         </div>
 
-        {/* Dealer switch (seller only) — animated */}
+        {/* Dealer switch (seller only) */}
         <AnimatePresence initial={false}>
           {role === "seller" && (
             <motion.div
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
               animate={{ opacity: 1, height: "auto", marginBottom: 24 }}
               exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3.5">
+              <div className="flex items-center justify-between rounded-[8px] border border-white/[0.08] bg-white/[0.02] px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <Store size={18} className="text-[#06B6D4]" />
+                  <Store size={16} className="text-[#7170ff]" />
                   <div>
-                    <div className="text-sm font-medium text-white">
+                    <div className="text-[13px] text-[#f7f8f8]" style={{ fontWeight: 510 }}>
                       Are you a dealer?
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Optional — for dealership accounts
+                    <div className="text-[11px] text-[#62666d]">
+                      For dealership accounts
                     </div>
                   </div>
                 </div>
-                {/* Switch */}
                 <button
                   type="button"
                   role="switch"
                   aria-checked={isDealer}
                   onClick={() => setIsDealer((v) => !v)}
-                  className={cn(
-                    "relative h-6 w-11 rounded-full transition-colors",
-                    isDealer ? "bg-[#06B6D4]" : "bg-white/15"
-                  )}
+                  className={`relative h-5 w-9 rounded-full transition-colors ${
+                    isDealer ? "bg-[#7170ff]" : "bg-white/10"
+                  }`}
                 >
                   <span
-                    className={cn(
-                      "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-lg transition-transform",
-                      isDealer ? "translate-x-[22px]" : "translate-x-0.5"
-                    )}
+                    className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${
+                      isDealer ? "translate-x-[18px]" : "translate-x-0.5"
+                    }`}
                   />
                 </button>
               </div>
@@ -173,95 +173,59 @@ function RegisterPage() {
           )}
         </AnimatePresence>
 
-        {/* Error message */}
+        {/* Error */}
         {error && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            className="mb-6 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400"
-          >
-            <AlertCircle size={16} className="shrink-0" />
-            {error}
-          </motion.div>
+          <div className="mb-6 flex items-start gap-2 rounded-[8px] border border-[#ef4444]/20 bg-[#ef4444]/5 px-4 py-3 text-sm text-[#ef4444]">
+            <AlertCircle size={16} className="shrink-0 mt-0.5" />
+            <span>{error}</span>
+          </div>
         )}
 
         {/* Form */}
         <form onSubmit={handleRegister} className="space-y-5">
-          {/* Display name */}
           <div>
-            <label
-              htmlFor="display_name"
-              className="mb-2 block text-sm font-medium text-gray-300"
-            >
+            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
               Display name
             </label>
             <div className="relative">
-              <User
-                size={18}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-              />
+              <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
               <input
-                id="display_name"
                 type="text"
                 required
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 disabled={loading}
                 placeholder="Your name"
-                className={cn(
-                  "w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-gray-500",
-                  "transition-all focus:border-[#3B82F6]/50 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20",
-                  "disabled:opacity-50"
-                )}
+                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
               />
             </div>
           </div>
 
-          {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="mb-2 block text-sm font-medium text-gray-300"
-            >
+            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
               Email
             </label>
             <div className="relative">
-              <Mail
-                size={18}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-              />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
               <input
-                id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
                 placeholder="you@example.com"
-                className={cn(
-                  "w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-gray-500",
-                  "transition-all focus:border-[#3B82F6]/50 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20",
-                  "disabled:opacity-50"
-                )}
+                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
               />
             </div>
           </div>
 
-          {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-gray-300"
-            >
+            <label className="block text-[13px] text-[#d0d6e0] mb-2" style={{ fontWeight: 510 }}>
               Password
             </label>
             <div className="relative">
-              <Lock
-                size={18}
-                className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
-              />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#62666d] pointer-events-none" />
               <input
-                id="password"
                 type="password"
                 required
                 minLength={6}
@@ -269,49 +233,39 @@ function RegisterPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
                 placeholder="At least 6 characters"
-                className={cn(
-                  "w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-white placeholder-gray-500",
-                  "transition-all focus:border-[#3B82F6]/50 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20",
-                  "disabled:opacity-50"
-                )}
+                className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 pl-10 pr-4 text-[14px] text-[#f7f8f8] placeholder-[#62666d] transition-all focus:border-[#5e6ad2]/50 focus:bg-white/[0.04] focus:outline-none focus:ring-1 focus:ring-[#5e6ad2]/20 disabled:opacity-50"
               />
             </div>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold text-white transition-all",
-              "disabled:cursor-not-allowed disabled:opacity-60",
-              role === "buyer"
-                ? "bg-[#3B82F6] glow-blue hover:bg-[#2563EB]"
-                : "bg-[#06B6D4] text-[#0D0F14] glow-cyan hover:bg-[#0891B2] hover:text-white"
-            )}
+            className="w-full flex items-center justify-center gap-2 rounded-[6px] bg-[#5e6ad2] hover:bg-[#7170ff] py-2.5 text-[14px] text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ fontWeight: 510 }}
           >
             {loading ? (
               <>
-                <Loader2 size={20} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
                 Creating account...
               </>
             ) : (
-              `Create ${role === "buyer" ? "Buyer" : "Seller"} Account`
+              <>
+                Create {role === "buyer" ? "Buyer" : "Seller"} Account
+                <ArrowRight size={16} />
+              </>
             )}
           </button>
         </form>
 
         {/* Login link */}
-        <p className="mt-6 text-center text-sm text-gray-400">
+        <p className="mt-8 text-center text-[13px] text-[#8a8f98]">
           Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-semibold text-[#3B82F6] transition-colors hover:text-[#60A5FA]"
-          >
+          <Link href="/login" className="text-[#7170ff] hover:text-[#828fff] transition-colors" style={{ fontWeight: 510 }}>
             Sign in
           </Link>
         </p>
       </div>
-    </motion.div>
+    </div>
   );
 }

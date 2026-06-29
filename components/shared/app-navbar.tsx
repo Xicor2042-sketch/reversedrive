@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { LayoutDashboard, FileText, MessageSquare, TrendingUp, LogOut, Menu, X } from 'lucide-react'
 
 export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin' }) {
   const supabase = createClient()
   const router = useRouter()
+  const pathname = usePathname()
   const [userName, setUserName] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   useEffect(() => {
     const getProfile = async () => {
@@ -48,53 +49,98 @@ export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin'
   const links = role === 'seller' ? sellerLinks : buyerLinks
 
   return (
-    <nav className="border-b border-white/10 bg-[#111827] sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 border-b border-white/[0.05] bg-[#0f1011]/80 backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+        {/* Left: Logo + Nav */}
         <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="text-xl font-bold">
-            Reverse<span className="text-[#06B6D4]">Drive</span>
+          <Link href="/dashboard" className="text-[15px] font-medium tracking-tight" style={{ fontWeight: 510, fontFeatureSettings: '"cv01", "ss03"' }}>
+            Reverse<span className="text-[#7170ff]">Drive</span>
           </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
-              >
-                <link.icon size={16} />
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-1">
+            {links.map((link) => {
+              const isActive = pathname === link.href || pathname?.startsWith(link.href + '/')
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-[13px] transition-all ${
+                    isActive
+                      ? 'text-[#f7f8f8] bg-white/[0.05]'
+                      : 'text-[#8a8f98] hover:text-[#f7f8f8] hover:bg-white/[0.03]'
+                  }`}
+                  style={{ fontWeight: 510 }}
+                >
+                  <link.icon size={14} />
+                  {link.label}
+                </Link>
+              )
+            })}
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="hidden sm:inline text-sm text-gray-400">{userName}</span>
-          <Button variant="ghost" size="sm" onClick={handleSignOut}>
-            <LogOut size={16} className="mr-2" />
-            Sign Out
-          </Button>
+
+        {/* Right: User menu */}
+        <div className="flex items-center gap-3">
+          {/* User avatar / name */}
+          <div className="relative hidden md:block">
+            <button
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="flex items-center gap-2 px-2 py-1.5 rounded-[6px] hover:bg-white/[0.05] transition-colors"
+            >
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#5e6ad2] to-[#7170ff] flex items-center justify-center text-[11px] font-medium text-white">
+                {userName.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <span className="text-[13px] text-[#d0d6e0]" style={{ fontWeight: 510 }}>{userName}</span>
+            </button>
+            {userMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
+                <div className="absolute right-0 mt-2 w-48 rounded-[8px] border border-white/[0.08] bg-[#191a1b] shadow-xl z-50 overflow-hidden">
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-[13px] text-[#d0d6e0] hover:bg-white/[0.05] transition-colors"
+                    style={{ fontWeight: 510 }}
+                  >
+                    <LogOut size={14} />
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Mobile menu toggle */}
           <button
-            className="md:hidden text-gray-400"
+            className="md:hidden text-[#8a8f98] hover:text-[#f7f8f8] p-1.5 rounded-[6px] hover:bg-white/[0.05] transition-colors"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
+
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-white/10 px-4 py-3 space-y-2">
+        <div className="md:hidden border-t border-white/[0.05] bg-[#0f1011] px-6 py-4 space-y-1">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block py-2 text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+              className="flex items-center gap-3 py-2.5 text-[14px] text-[#d0d6e0] hover:text-[#f7f8f8] transition-colors"
+              style={{ fontWeight: 510 }}
               onClick={() => setMenuOpen(false)}
             >
               <link.icon size={16} />
               {link.label}
             </Link>
           ))}
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 py-2.5 text-[14px] text-[#d0d6e0] hover:text-[#f7f8f8] transition-colors"
+            style={{ fontWeight: 510 }}
+          >
+            <LogOut size={16} />
+            Sign Out
+          </button>
         </div>
       )}
     </nav>
