@@ -111,7 +111,7 @@ export default async function RequestDetailPage({ params }: Props) {
         </Link>
 
         {/* Header card */}
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] overflow-hidden mb-6">
+        <div className="glass-card rounded-[14px] overflow-hidden mb-6">
           <div className="p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
               <div className="flex-1">
@@ -233,7 +233,7 @@ export default async function RequestDetailPage({ params }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Specs */}
-            <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+            <div className="glass-card rounded-[14px] p-6">
               <h2 className="text-[15px] mb-5" style={{ fontWeight: 510 }}>Specifications</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <Spec icon={Car} label="Body Type" value={request.body_type || "Any"} />
@@ -270,7 +270,7 @@ export default async function RequestDetailPage({ params }: Props) {
             </div>
 
             {/* Sellers who unlocked */}
-            <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+            <div className="glass-card rounded-[14px] p-6">
               <h2 className="text-[15px] mb-5 flex items-center gap-2" style={{ fontWeight: 510 }}>
                 <Unlock size={16} className="text-[#7170ff]" />
                 Sellers Who Unlocked This Request
@@ -312,7 +312,7 @@ export default async function RequestDetailPage({ params }: Props) {
             </div>
 
             {/* Conversations */}
-            <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+            <div className="glass-card rounded-[14px] p-6">
               <h2 className="text-[15px] mb-5 flex items-center gap-2" style={{ fontWeight: 510 }}>
                 <MessageSquare size={16} className="text-[#10b981]" />
                 Conversations
@@ -379,7 +379,7 @@ export default async function RequestDetailPage({ params }: Props) {
               </Link>
             </div>
 
-            <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+            <div className="glass-card rounded-[14px] p-6">
               <h3 className="text-[15px] mb-4" style={{ fontWeight: 510 }}>Need help?</h3>
               <ul className="space-y-3 text-[13px] text-[#8a8f98]">
                 <li className="flex items-start gap-2">

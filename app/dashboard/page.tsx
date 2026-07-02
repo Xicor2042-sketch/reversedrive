@@ -366,7 +366,7 @@ export default async function DashboardPage() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-16 text-center">
+                <div className="glass-card rounded-[12px] p-16 text-center">
                   <div className="w-12 h-12 rounded-[10px] bg-[#5e6ad2]/10 border border-[#5e6ad2]/20 flex items-center justify-center mx-auto mb-5">
                     <Car size={22} className="text-[#7170ff]" />
                   </div>

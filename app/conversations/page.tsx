@@ -75,7 +75,7 @@ export default async function ConversationsPage() {
         </div>
 
         {enriched.length === 0 ? (
-          <div className="rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-16 text-center">
+          <div className="glass-card rounded-[12px] p-16 text-center">
             <div className="w-12 h-12 rounded-[10px] bg-[#5e6ad2]/10 border border-[#5e6ad2]/20 flex items-center justify-center mx-auto mb-5">
               <MessageSquare size={22} className="text-[#7170ff]" />
             </div>
@@ -90,7 +90,7 @@ export default async function ConversationsPage() {
               <Link
                 key={conv.id}
                 href={`/deal-room/${conv.id}`}
-                className="block rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-4 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all group"
+                className="block glass-card rounded-[12px] p-4 hover:bg-white/[0.04] hover:border-white/[0.12] transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#5e6ad2] to-[#7170ff] flex items-center justify-center text-[14px] text-white shrink-0">

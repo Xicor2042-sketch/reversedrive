@@ -83,25 +83,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-4 py-12 antialiased"
-      style={{ fontFeatureSettings: '"cv01", "ss03"' }}
-    >
-      {/* Ambient background glow */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 h-[520px] w-[720px] rounded-full bg-[#5e6ad2]/12 blur-[140px]" />
-        <div className="absolute top-1/2 -right-[10%] h-[420px] w-[520px] -translate-y-1/2 rounded-full bg-[#7170ff]/8 blur-[120px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(94,106,210,0.08),transparent_50%)]" />
-      </div>
+    <div className="text-[#f7f8f8] antialiased">
+      {/* The (auth) layout renders the page shell + logo */}
+      <div className="relative w-full max-w-[400px] mx-auto">
 
-      <div className="relative w-full max-w-[400px]">
-        <Link href="/" className="mb-8 block text-center">
-          <span className="text-xl tracking-tight" style={{ fontWeight: 510 }}>
-            Reverse<span className="text-[#7170ff]">Drive</span>
-          </span>
-        </Link>
-
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
+        <div className="glass-card rounded-[14px] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
           <div className="mb-8">
             <h1
               className="text-[26px] leading-tight tracking-tight"

@@ -88,7 +88,7 @@ export default async function RequestsListPage() {
                 <Link
                   key={req.id}
                   href={`/requests/${req.id}`}
-                  className="group block rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-4 sm:p-5 transition-all duration-200 hover:bg-white/[0.04] hover:border-white/[0.12] hover:shadow-[0_2px_8px_rgba(0,0,0,0.16)]"
+                  className="group block glass-card rounded-[12px] p-4 sm:p-5 transition-all duration-200 hover:bg-white/[0.04] hover:border-white/[0.12] hover:shadow-[0_2px_8px_rgba(0,0,0,0.16)]"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -153,7 +153,7 @@ export default async function RequestsListPage() {
             })}
           </div>
         ) : (
-          <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-12 sm:p-16 text-center">
+          <div className="glass-card rounded-[14px] p-12 sm:p-16 text-center">
             <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-[14px] bg-[#5e6ad2]/10 text-[#7170ff]">
               <Search size={24} />
             </div>

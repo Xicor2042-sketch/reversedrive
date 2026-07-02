@@ -169,7 +169,7 @@ export default function SettingsPage() {
         )}
 
         <form onSubmit={save} className="space-y-6">
-          <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+          <div className="glass-card rounded-[14px] p-6">
             <h2 className="text-[15px] mb-5" style={{ fontWeight: 510 }}>Profile</h2>
 
             <div className="space-y-4">
@@ -234,7 +234,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+          <div className="glass-card rounded-[14px] p-6">
             <h2 className="text-[15px] mb-4" style={{ fontWeight: 510 }}>Account Type</h2>
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -282,7 +282,7 @@ export default function SettingsPage() {
           </div>
         </form>
 
-        <form onSubmit={changePassword} className="mt-6 rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6 space-y-4">
+        <form onSubmit={changePassword} className="mt-6 glass-card rounded-[14px] p-6 space-y-4">
           <div>
             <h2 className="text-[15px]" style={{ fontWeight: 510 }}>Change Password</h2>
             <p className="text-[13px] text-[#8a8f98] mt-1">Set a new password for your account.</p>

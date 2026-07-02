@@ -136,7 +136,7 @@ function RegisterPage() {
       </div>
 
       <div className="relative w-full max-w-[440px]">
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
+        <div className="glass-card rounded-[14px] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
           <div className="mb-6">
             <h1
               className="text-[26px] leading-tight tracking-tight"

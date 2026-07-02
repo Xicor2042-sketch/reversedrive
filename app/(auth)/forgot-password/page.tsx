@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
     <div className="text-[#f7f8f8] antialiased">
       {/* The (auth) layout renders the page shell + logo */}
       <div className="relative w-full max-w-[400px] mx-auto">
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
+        <div className="glass-card rounded-[14px] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
           <Link
             href="/login"
             className="mb-6 inline-flex items-center gap-1.5 text-[13px] text-[#8a8f98] hover:text-[#f7f8f8] transition-colors"

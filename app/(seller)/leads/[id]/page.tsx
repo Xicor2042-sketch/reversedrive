@@ -96,7 +96,7 @@ export default async function LeadDetailPage({ params }: Props) {
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+        <div className="glass-card rounded-[14px] overflow-hidden">
           <div className="p-8">
             {/* Buyer header */}
             <div className="flex items-center gap-4 mb-8 pb-8 border-b border-white/[0.05]">

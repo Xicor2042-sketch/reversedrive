@@ -266,7 +266,7 @@ export default function RequestWizard() {
         </div>
 
         {/* Form card */}
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-5 sm:p-8 min-h-[420px] shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
+        <div className="glass-card rounded-[14px] p-5 sm:p-8 min-h-[420px] shadow-[0_1px_2px_rgba(0,0,0,0.2)]">
           <div className="transition-all duration-300 ease-out" key={step}>
             {step === 1 && <Step1Specs form={form} setForm={setForm} errors={errors} />}
             {step === 2 && <Step2Budget form={form} setForm={setForm} errors={errors} monthlyPayment={monthlyPayment} />}
@@ -503,7 +503,7 @@ function Step2Budget({
       </div>
 
       {/* Max budget slider */}
-      <div className="rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-5">
+      <div className="glass-card rounded-[12px] p-5">
         <div className="mb-4 flex items-end justify-between">
           <label className="text-[13px] text-[#d0d6e0]" style={{ fontWeight: 510 }}>
             Max budget

@@ -86,7 +86,7 @@ function WalletPageContent() {
           </div>
         )}
 
-        <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6 mb-6">
+        <div className="glass-card rounded-[14px] p-6 mb-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-[10px] bg-[#5e6ad2]/10 border border-[#5e6ad2]/20 flex items-center justify-center">
               <Wallet size={20} className="text-[#7170ff]" />

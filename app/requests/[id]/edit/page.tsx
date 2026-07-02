@@ -243,7 +243,7 @@ function EditRequestPage() {
           })}
         </div>
 
-        <div className="rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-8 min-h-[420px]">
+        <div className="glass-card rounded-[12px] p-8 min-h-[420px]">
           {step === 1 && form && <Step1Specs form={form} setForm={setForm as any} errors={errors} />}
           {step === 2 && form && <Step2Budget form={form} setForm={setForm as any} errors={errors} monthlyPayment={monthlyPayment} />}
           {step === 3 && form && <Step3Location form={form} setForm={setForm as any} errors={errors} />}
