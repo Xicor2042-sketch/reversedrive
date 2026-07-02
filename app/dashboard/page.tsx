@@ -86,7 +86,11 @@ export default async function DashboardPage() {
     return (
       <div className="min-h-screen bg-[#08090a] text-[#f7f8f8]" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
         <AppNavbar role="seller" />
-        <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+          <div className="absolute -top-[15%] left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full bg-[#5e6ad2]/8 blur-[140px]" />
+          <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-[#7170ff]/5 blur-[110px]" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-6 py-12">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
             <div>
               <h1 className="text-2xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.02em" }}>Seller Dashboard</h1>
@@ -102,14 +106,14 @@ export default async function DashboardPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
             <StatCard label="Total Unlocks" value={totalUnlocks.toString()} icon={Unlock} />
-            <StatCard label="Total Spent" value={formatBudget(totalSpent)} icon={DollarSign} />
-            <StatCard label="Active Leads" value={activeLeadsCount?.toString() || "0"} icon={Activity} />
+            <StatCard label="Total Spent" value={formatBudget(totalSpent)} icon={DollarSign} accent="green" />
+            <StatCard label="Active Leads" value={activeLeadsCount?.toString() || "0"} icon={Activity} accent="amber" />
             <StatCard label="Messages" value={(conversations || []).length.toString()} icon={MessageSquare} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-              <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+              <div className="glass-card rounded-[14px] p-6">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="text-[15px]" style={{ fontWeight: 510 }}>Recent Unlocks</h2>
                   <Link href="/conversations" className="text-[13px] text-[#7170ff] hover:text-[#828fff] inline-flex items-center gap-1" style={{ fontWeight: 510 }}>
@@ -167,7 +171,7 @@ export default async function DashboardPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+              <div className="glass-card rounded-[14px] p-6">
                 <h2 className="text-[15px] mb-5" style={{ fontWeight: 510 }}>Transaction History</h2>
                 {transactions && transactions.length > 0 ? (
                   <div className="space-y-2">
@@ -257,7 +261,11 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#08090a] text-[#f7f8f8]" style={{ fontFeatureSettings: '"cv01", "ss03"' }}>
       <AppNavbar role="buyer" />
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+        <div className="absolute -top-[15%] left-1/2 -translate-x-1/2 h-[420px] w-[720px] rounded-full bg-[#5e6ad2]/8 blur-[140px]" />
+        <div className="absolute bottom-[5%] right-[8%] h-[260px] w-[260px] rounded-full bg-[#7170ff]/5 blur-[110px]" />
+      </div>
+      <div className="relative max-w-6xl mx-auto px-6 py-12">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
           <div>
             <h1 className="text-2xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.02em" }}>My Garage</h1>
@@ -281,13 +289,13 @@ export default async function DashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
           <StatCard label="Active Requests" value={activeRequests.length.toString()} icon={FileText} />
-          <StatCard label="Total Views" value={totalViews.toString()} icon={Eye} />
-          <StatCard label="Conversations" value={(conversations || []).length.toString()} icon={MessageSquare} />
+          <StatCard label="Total Views" value={totalViews.toString()} icon={Eye} accent="amber" />
+          <StatCard label="Conversations" value={(conversations || []).length.toString()} icon={MessageSquare} accent="green" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+            <div className="glass-card rounded-[14px] p-6">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-[15px]" style={{ fontWeight: 510 }}>Your Requests</h2>
                 <Link href="/requests" className="text-[13px] text-[#7170ff] hover:text-[#828fff] inline-flex items-center gap-1" style={{ fontWeight: 510 }}>
@@ -314,7 +322,7 @@ export default async function DashboardPage() {
                           </div>
                         </div>
                         <span
-                          className={`text-[11px] px-2 py-0.5 rounded-full border whitespace-nowrap ${
+                          className={`inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-full border whitespace-nowrap ${
                             req.status === "active"
                               ? "bg-[#10b981]/10 text-[#10b981] border-[#10b981]/20"
                               : req.status === "paused"
@@ -324,7 +332,10 @@ export default async function DashboardPage() {
                               : "bg-white/5 text-[#8a8f98] border-white/10"
                           }`}
                         >
-                          {req.status}
+                          {req.status === "active" && (
+                            <span className="w-1 h-1 rounded-full bg-[#10b981] animate-pulse" />
+                          )}
+                          {req.status === "active" ? "Live" : req.status}
                         </span>
                       </div>
 
@@ -391,7 +402,7 @@ export default async function DashboardPage() {
               </Link>
             </div>
 
-            <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
+            <div className="glass-card rounded-[14px] p-6">
               <h2 className="text-[15px] mb-5" style={{ fontWeight: 510 }}>Recent Messages</h2>
               {conversations && conversations.length > 0 ? (
                 <div className="space-y-2">
@@ -430,14 +441,23 @@ export default async function DashboardPage() {
   )
 }
 
-function StatCard({ label, value, icon: Icon }: { label: string; value: string; icon: any }) {
+const STAT_ACCENTS: Record<string, { text: string; bg: string; border: string }> = {
+  indigo: { text: "text-[#7170ff]", bg: "bg-[#5e6ad2]/10", border: "border-[#5e6ad2]/20" },
+  green: { text: "text-[#10b981]", bg: "bg-[#10b981]/10", border: "border-[#10b981]/20" },
+  amber: { text: "text-[#f5a623]", bg: "bg-[#f5a623]/10", border: "border-[#f5a623]/20" },
+}
+
+function StatCard({ label, value, icon: Icon, accent = "indigo" }: { label: string; value: string; icon: any; accent?: string }) {
+  const a = STAT_ACCENTS[accent] ?? STAT_ACCENTS.indigo
   return (
-    <div className="rounded-[12px] border border-white/[0.06] bg-white/[0.02] p-5">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-[12px] text-[#62666d]" style={{ fontWeight: 510 }}>{label}</span>
-        <Icon size={15} className="text-[#62666d]" />
+    <div className="glass-card rounded-[14px] p-5 transition-all hover:border-white/[0.14]">
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-[12px] text-[#8a8f98]" style={{ fontWeight: 510 }}>{label}</span>
+        <div className={`h-7 w-7 rounded-[8px] ${a.bg} border ${a.border} flex items-center justify-center`}>
+          <Icon size={14} className={a.text} />
+        </div>
       </div>
-      <div className="text-2xl tracking-tight tabular-nums" style={{ fontWeight: 510 }}>{value}</div>
+      <div className="text-[26px] leading-none tracking-tight tabular-nums" style={{ fontWeight: 510 }}>{value}</div>
     </div>
   )
 }

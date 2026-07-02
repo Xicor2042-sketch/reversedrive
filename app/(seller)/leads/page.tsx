@@ -324,7 +324,7 @@ function LeadCard({
   return (
     <div
       onClick={onView}
-      className="lead-card group relative rounded-[12px] border border-white/[0.06] bg-[#0c0d0e] hover:bg-white/[0.03] hover:border-white/[0.12] p-5 cursor-pointer transition-all duration-200"
+      className="lead-card glass-card group relative rounded-[14px] hover:border-white/[0.14] p-5 cursor-pointer transition-all duration-200"
       style={{ ["--stagger-index" as any]: index }}
     >
       {/* Accent line */}

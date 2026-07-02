@@ -63,9 +63,9 @@ export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin'
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-[13px] transition-all ${
+                  className={`relative flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-[13px] transition-all ${
                     isActive
-                      ? 'text-[#f7f8f8] bg-white/[0.05]'
+                      ? 'text-[#f7f8f8] bg-white/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_0_16px_-6px_rgba(94,106,210,0.6)] after:absolute after:-bottom-[13px] after:left-3 after:right-3 after:h-[2px] after:rounded-full after:bg-gradient-to-r after:from-transparent after:via-[#7170ff] after:to-transparent'
                       : 'text-[#8a8f98] hover:text-[#f7f8f8] hover:bg-white/[0.03]'
                   }`}
                   style={{ fontWeight: 510 }}
