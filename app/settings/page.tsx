@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import AppNavbar from "@/components/shared/app-navbar"
 import Link from "next/link"
-import { Loader2, Save, User, Mail, Building2, Phone, ShieldCheck, AlertCircle, ArrowLeft, LogOut } from "lucide-react"
+import { Loader2, Save, User, Mail, Building2, Phone, ShieldCheck, AlertCircle, ArrowLeft, LogOut, Lock } from "lucide-react"
 
 export default function SettingsPage() {
   const supabase = createClient()
@@ -13,11 +13,15 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null)
+  const [pw, setPw] = useState({ next: "", confirm: "" })
+  const [pwSaving, setPwSaving] = useState(false)
+  const [pwMsg, setPwMsg] = useState<{ type: "error" | "success"; text: string } | null>(null)
   const [form, setForm] = useState({
     display_name: "",
     email: "",
     phone: "",
-    company_name: "",
+    dealer_business_name: "",
+    avatar_url: "",
     role: "buyer",
     is_dealer: false,
   })
@@ -40,7 +44,8 @@ export default function SettingsPage() {
           display_name: profile.display_name || "",
           email: authUser.user?.email || "",
           phone: profile.phone || "",
-          company_name: profile.company_name || "",
+          dealer_business_name: profile.dealer_business_name || "",
+          avatar_url: profile.avatar_url || "",
           role: profile.role || "buyer",
           is_dealer: !!profile.is_dealer,
         })
@@ -63,7 +68,8 @@ export default function SettingsPage() {
       .update({
         display_name: form.display_name.trim(),
         phone: form.phone.trim() || null,
-        company_name: form.company_name.trim() || null,
+        dealer_business_name: form.dealer_business_name.trim() || null,
+        avatar_url: form.avatar_url.trim() || null,
         is_dealer: form.is_dealer,
         updated_at: new Date().toISOString(),
       })
@@ -80,6 +86,48 @@ export default function SettingsPage() {
   const signOut = async () => {
     await supabase.auth.signOut()
     router.push("/")
+  }
+
+  const switchRole = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const nextRole = form.role === "buyer" ? "seller" : "buyer"
+    setSaving(true)
+    setMessage(null)
+    const { error } = await supabase
+      .from("profiles")
+      .update({ role: nextRole, updated_at: new Date().toISOString() })
+      .eq("id", user.id)
+    setSaving(false)
+    if (error) {
+      setMessage({ type: "error", text: error.message })
+    } else {
+      setForm({ ...form, role: nextRole })
+      setMessage({ type: "success", text: `You're now in ${nextRole} mode.` })
+      router.refresh()
+    }
+  }
+
+  const changePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPwMsg(null)
+    if (pw.next.length < 6) {
+      setPwMsg({ type: "error", text: "Password must be at least 6 characters." })
+      return
+    }
+    if (pw.next !== pw.confirm) {
+      setPwMsg({ type: "error", text: "Passwords do not match." })
+      return
+    }
+    setPwSaving(true)
+    const { error } = await supabase.auth.updateUser({ password: pw.next })
+    setPwSaving(false)
+    if (error) {
+      setPwMsg({ type: "error", text: error.message })
+    } else {
+      setPwMsg({ type: "success", text: "Password updated successfully." })
+      setPw({ next: "", confirm: "" })
+    }
   }
 
   if (loading) {
@@ -151,11 +199,20 @@ export default function SettingsPage() {
                 />
               </Field>
 
-              <Field label="Company Name" icon={Building2}>
+              <Field label="Business / Dealership Name" icon={Building2}>
                 <input
-                  value={form.company_name}
-                  onChange={(e) => setForm({ ...form, company_name: e.target.value })}
+                  value={form.dealer_business_name}
+                  onChange={(e) => setForm({ ...form, dealer_business_name: e.target.value })}
                   placeholder="Dealer or business name (optional)"
+                  className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 px-3.5 text-[14px] text-[#f7f8f8] placeholder-[#62666d] focus:border-[#5e6ad2]/50 focus:outline-none transition-all"
+                />
+              </Field>
+
+              <Field label="Avatar URL" icon={User}>
+                <input
+                  value={form.avatar_url}
+                  onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
+                  placeholder="https://... (optional)"
                   className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 px-3.5 text-[14px] text-[#f7f8f8] placeholder-[#62666d] focus:border-[#5e6ad2]/50 focus:outline-none transition-all"
                 />
               </Field>
@@ -179,12 +236,25 @@ export default function SettingsPage() {
 
           <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6">
             <h2 className="text-[15px] mb-4" style={{ fontWeight: 510 }}>Account Type</h2>
-            <div className="text-[14px] text-[#d0d6e0] capitalize mb-1">{form.role}</div>
-            <p className="text-[13px] text-[#8a8f98]">
-              {form.role === "buyer"
-                ? "You are looking to buy a car. Switching roles requires contacting support."
-                : "You sell cars and unlock buyer leads."}
-            </p>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <div className="text-[14px] text-[#d0d6e0] capitalize mb-1" style={{ fontWeight: 510 }}>{form.role}</div>
+                <p className="text-[13px] text-[#8a8f98]">
+                  {form.role === "buyer"
+                    ? "You are looking to buy a car."
+                    : "You sell cars and unlock buyer leads."}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={switchRole}
+                disabled={saving}
+                className="inline-flex items-center gap-2 rounded-[6px] border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] px-4 py-2 text-[13px] text-[#d0d6e0] transition-all disabled:opacity-60"
+                style={{ fontWeight: 510 }}
+              >
+                Switch to {form.role === "buyer" ? "Seller" : "Buyer"}
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center justify-between">
@@ -207,6 +277,59 @@ export default function SettingsPage() {
                 <><Loader2 size={16} className="animate-spin" /> Saving...</>
               ) : (
                 <><Save size={16} /> Save Changes</>
+              )}
+            </button>
+          </div>
+        </form>
+
+        <form onSubmit={changePassword} className="mt-6 rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-6 space-y-4">
+          <div>
+            <h2 className="text-[15px]" style={{ fontWeight: 510 }}>Change Password</h2>
+            <p className="text-[13px] text-[#8a8f98] mt-1">Set a new password for your account.</p>
+          </div>
+          {pwMsg && (
+            <div
+              className={`rounded-[10px] border px-4 py-3 text-[13px] flex items-start gap-2 ${
+                pwMsg.type === "error"
+                  ? "border-[#ef4444]/20 bg-[#ef4444]/5 text-[#ef4444]"
+                  : "border-[#10b981]/20 bg-[#10b981]/5 text-[#10b981]"
+              }`}
+            >
+              {pwMsg.type === "error" ? <AlertCircle size={15} className="shrink-0 mt-0.5" /> : <ShieldCheck size={15} className="shrink-0 mt-0.5" />}
+              <span>{pwMsg.text}</span>
+            </div>
+          )}
+          <Field label="New Password" icon={Lock}>
+            <input
+              type="password"
+              minLength={6}
+              value={pw.next}
+              onChange={(e) => setPw({ ...pw, next: e.target.value })}
+              placeholder="At least 6 characters"
+              className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 px-3.5 text-[14px] text-[#f7f8f8] placeholder-[#62666d] focus:border-[#5e6ad2]/50 focus:outline-none transition-all"
+            />
+          </Field>
+          <Field label="Confirm New Password" icon={Lock}>
+            <input
+              type="password"
+              minLength={6}
+              value={pw.confirm}
+              onChange={(e) => setPw({ ...pw, confirm: e.target.value })}
+              placeholder="Re-enter new password"
+              className="w-full rounded-[6px] border border-white/[0.08] bg-white/[0.02] py-2.5 px-3.5 text-[14px] text-[#f7f8f8] placeholder-[#62666d] focus:border-[#5e6ad2]/50 focus:outline-none transition-all"
+            />
+          </Field>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={pwSaving}
+              className="inline-flex items-center gap-2 rounded-[6px] bg-[#5e6ad2] hover:bg-[#7170ff] px-5 py-2.5 text-[13px] text-white transition-all disabled:opacity-60"
+              style={{ fontWeight: 510 }}
+            >
+              {pwSaving ? (
+                <><Loader2 size={16} className="animate-spin" /> Updating...</>
+              ) : (
+                <><Lock size={15} /> Update Password</>
               )}
             </button>
           </div>

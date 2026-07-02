@@ -241,6 +241,16 @@ export default async function DashboardPage() {
     .order("last_message_at", { ascending: false, nullsFirst: false })
     .limit(5)
 
+  const sellerIds = Array.from(new Set((conversations || []).map((c) => c.seller_id).filter(Boolean) as string[]))
+  let sellerMap: Record<string, any> = {}
+  if (sellerIds.length > 0) {
+    const { data: sellers } = await supabase
+      .from("public_profiles")
+      .select("id, display_name")
+      .in("id", sellerIds)
+    sellerMap = Object.fromEntries((sellers || []).map((s) => [s.id, s]))
+  }
+
   const activeRequests = (requests || []).filter((r) => r.status === "active")
   const totalViews = (requests || []).reduce((sum, r) => sum + (r.view_count || 0), 0)
 
@@ -392,10 +402,12 @@ export default async function DashboardPage() {
                       className="flex items-center gap-3 rounded-[10px] border border-white/[0.05] bg-white/[0.015] p-3 hover:bg-white/[0.03] hover:border-white/[0.10] transition-all group"
                     >
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#5e6ad2] to-[#7170ff] flex items-center justify-center text-[12px] text-white shrink-0">
-                        S
+                        {(sellerMap[convo.seller_id]?.display_name || "S").charAt(0).toUpperCase()}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-[13px] truncate" style={{ fontWeight: 510 }}>Seller #{convo.seller_id.slice(0, 8)}</div>
+                        <div className="text-[13px] truncate" style={{ fontWeight: 510 }}>
+                          {sellerMap[convo.seller_id]?.display_name || `Seller #${convo.seller_id.slice(0, 8)}`}
+                        </div>
                         <div className="text-[11px] text-[#62666d]">
                           {convo.last_message_at ? `Last message ${timeAgo(convo.last_message_at)}` : "No messages yet"}
                         </div>

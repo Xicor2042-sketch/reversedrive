@@ -31,10 +31,40 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // Apply any sign-up intent (role/dealer flag) stashed by the register page.
+      const intentCookie = request.cookies.get("rd_oauth_intent")?.value;
+      let nextPath = next;
+      if (intentCookie) {
+        let intent: { role?: string; is_dealer?: boolean; display_name?: string; dealer_business_name?: string } | null = null;
+        try {
+          intent = JSON.parse(intentCookie);
+        } catch {
+          try { intent = JSON.parse(decodeURIComponent(intentCookie)); } catch {}
+        }
+        if (intent) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const updates: Record<string, unknown> = {
+              role: intent.role === "seller" ? "seller" : "buyer",
+              is_dealer: !!intent.is_dealer,
+              updated_at: new Date().toISOString(),
+            };
+            if (intent.display_name) updates.display_name = intent.display_name;
+            if (intent.dealer_business_name) updates.dealer_business_name = intent.dealer_business_name;
+            await supabase.from("profiles").update(updates).eq("id", user.id);
+            await supabase.auth.updateUser({
+              data: { role: updates.role, is_dealer: updates.is_dealer },
+            }).catch(() => {});
+            nextPath = intent.role === "seller" ? "/leads" : "/dashboard";
+          }
+        }
+      }
+
       // Build redirect response and forward the session cookies
-      const response = NextResponse.redirect(`${origin}${next}`);
+      const response = NextResponse.redirect(`${origin}${nextPath}`);
       // Copy cookies from the request (now populated by exchangeCodeForSession)
       request.cookies.getAll().forEach((cookie) => {
+        if (cookie.name === "rd_oauth_intent") return;
         response.cookies.set(cookie.name, cookie.value, {
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
@@ -43,6 +73,8 @@ export async function GET(request: NextRequest) {
           secure: process.env.NODE_ENV === "production",
         });
       });
+      // Clear the consumed intent cookie.
+      response.cookies.set("rd_oauth_intent", "", { path: "/", maxAge: 0 });
       return response;
     }
 

@@ -9,7 +9,7 @@ function getStripe() {
   }
   return new Stripe(process.env.STRIPE_SECRET_KEY)
 }
-const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || !process.env.STRIPE_SECRET_KEY?.startsWith('sk_')
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
 export async function POST(request: NextRequest) {
   try {

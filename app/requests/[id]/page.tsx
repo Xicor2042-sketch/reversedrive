@@ -24,6 +24,7 @@ import {
   Shield,
   AlertTriangle,
   ChevronRight,
+  Trash2,
 } from "lucide-react"
 import { cn, formatBudget, formatDate, timeAgo } from "@/lib/utils/cn"
 
@@ -67,6 +68,18 @@ export default async function RequestDetailPage({ params }: Props) {
     .select("id, seller_id, status, last_message_at, created_at")
     .eq("request_id", id)
     .order("last_message_at", { ascending: false, nullsFirst: false })
+
+  const sellerIds = Array.from(new Set(
+    [...(unlocks || []).map((u) => u.seller_id), ...(conversations || []).map((c) => c.seller_id)].filter(Boolean) as string[]
+  ))
+  let sellerMap: Record<string, any> = {}
+  if (sellerIds.length > 0) {
+    const { data: sellers } = await supabase
+      .from("public_profiles")
+      .select("id, display_name, is_dealer, dealer_business_name")
+      .in("id", sellerIds)
+    sellerMap = Object.fromEntries((sellers || []).map((s) => [s.id, s]))
+  }
 
   const isActive = request.status === "active"
   const isPaused = request.status === "paused"
@@ -182,6 +195,29 @@ export default async function RequestDetailPage({ params }: Props) {
                   </button>
                 </form>
               )}
+
+              {isClosedOrExpired && (
+                <>
+                  <form action={updateRequestStatus.bind(null, id, "active")}>
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-1.5 rounded-[6px] border border-[#10b981]/20 bg-[#10b981]/10 hover:bg-[#10b981]/15 px-3 py-2 text-[13px] text-[#10b981] transition-all"
+                      style={{ fontWeight: 510 }}
+                    >
+                      <Play size={14} /> Reactivate
+                    </button>
+                  </form>
+                  <form action={deleteRequest.bind(null, id)} className="ml-auto">
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-1.5 rounded-[6px] border border-[#ef4444]/20 bg-[#ef4444]/10 hover:bg-[#ef4444]/15 px-3 py-2 text-[13px] text-[#ef4444] transition-all"
+                      style={{ fontWeight: 510 }}
+                    >
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </form>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -252,11 +288,18 @@ export default async function RequestDetailPage({ params }: Props) {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#5e6ad2]/30 to-[#7170ff]/30 flex items-center justify-center text-[11px] text-white">
-                          S
+                          {(sellerMap[lead.seller_id]?.display_name || "S").charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-[13px]" style={{ fontWeight: 510 }}>Seller #{lead.seller_id.slice(0, 8)}</p>
-                          <p className="text-[11px] text-[#62666d]">Unlocked {timeAgo(lead.unlocked_at)}</p>
+                          <p className="text-[13px]" style={{ fontWeight: 510 }}>
+                            {sellerMap[lead.seller_id]?.display_name || `Seller #${lead.seller_id.slice(0, 8)}`}
+                          </p>
+                          <p className="text-[11px] text-[#62666d]">
+                            {sellerMap[lead.seller_id]?.is_dealer && sellerMap[lead.seller_id]?.dealer_business_name
+                              ? `${sellerMap[lead.seller_id].dealer_business_name} · `
+                              : ""}
+                            Unlocked {timeAgo(lead.unlocked_at)}
+                          </p>
                         </div>
                       </div>
                       <span className="text-[13px] tabular-nums text-[#7170ff]" style={{ fontWeight: 510 }}>
@@ -288,10 +331,12 @@ export default async function RequestDetailPage({ params }: Props) {
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#10b981]/30 to-[#5e6ad2]/30 flex items-center justify-center text-[11px] text-white">
-                          S
+                          {(sellerMap[convo.seller_id]?.display_name || "S").charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-[13px]" style={{ fontWeight: 510 }}>Seller #{convo.seller_id.slice(0, 8)}</p>
+                          <p className="text-[13px]" style={{ fontWeight: 510 }}>
+                            {sellerMap[convo.seller_id]?.display_name || `Seller #${convo.seller_id.slice(0, 8)}`}
+                          </p>
                           <p className="text-[11px] text-[#62666d]">
                             {convo.last_message_at ? `Last message ${timeAgo(convo.last_message_at)}` : `Started ${timeAgo(convo.created_at)}`}
                           </p>

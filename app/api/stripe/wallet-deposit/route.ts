@@ -3,13 +3,14 @@ import { createClient } from "@/lib/supabase/server"
 import { handleWalletDeposit } from "@/lib/stripe/payment-handlers"
 import Stripe from 'stripe'
 
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true"
+
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY is not configured')
+    throw new Error("STRIPE_SECRET_KEY is not configured")
   }
   return new Stripe(process.env.STRIPE_SECRET_KEY)
 }
-const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true' || !process.env.STRIPE_SECRET_KEY?.startsWith('sk_')
 
 export async function POST(request: NextRequest) {
   try {

@@ -33,6 +33,7 @@ export async function handleLeadUnlock(payload: LeadUnlockMeta) {
     return { alreadyUnlocked: true, conversationId: conv?.id || null }
   }
 
+  // 1) Record the unlock (one per seller+request — enforced by unique constraint)
   const { data: unlock, error: unlockError } = await supabase
     .from("unlocked_leads")
     .insert({
@@ -47,11 +48,24 @@ export async function handleLeadUnlock(payload: LeadUnlockMeta) {
 
   if (unlockError) throw new Error(unlockError.message)
 
+  // 2) Look up the buyer who owns this request (needed to open the Deal Room —
+  //    conversations.buyer_id is NOT NULL, so the insert fails without it)
+  const { data: carRequest, error: reqError } = await supabase
+    .from("car_requests")
+    .select("buyer_id")
+    .eq("id", payload.requestId)
+    .single()
+
+  if (reqError || !carRequest) throw new Error(reqError?.message || "Request not found")
+
+  // 3) Open the Deal Room conversation (buyer_id + unlock_id are both NOT NULL)
   const { data: conversation, error: convError } = await supabase
     .from("conversations")
     .insert({
       request_id: payload.requestId,
+      buyer_id: carRequest.buyer_id,
       seller_id: payload.sellerId,
+      unlock_id: unlock.id,
       status: "active",
     })
     .select("id")
@@ -59,13 +73,14 @@ export async function handleLeadUnlock(payload: LeadUnlockMeta) {
 
   if (convError) throw new Error(convError.message)
 
+  // 4) Record the $9.99 unlock transaction (column names + status must match the schema)
   const { error: txError } = await supabase.from("transactions").insert({
     seller_id: payload.sellerId,
-    request_id: payload.requestId,
+    related_request_id: payload.requestId,
     amount: payload.unlockFeeCents / 100,
     type: "lead_unlock",
-    status: "paid",
-    stripe_payment_intent_id: payload.stripePaymentIntentId || `demo_${Date.now()}`,
+    status: "completed",
+    stripe_payment_id: payload.stripePaymentIntentId || `demo_${Date.now()}`,
   })
 
   if (txError) throw new Error(txError.message)

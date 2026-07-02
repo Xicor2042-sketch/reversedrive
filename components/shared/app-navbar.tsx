@@ -141,6 +141,15 @@ export default function AppNavbar({ role }: { role: 'buyer' | 'seller' | 'admin'
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/settings"
+            className="flex items-center gap-3 py-2.5 text-[14px] text-[#d0d6e0] hover:text-[#f7f8f8] transition-colors"
+            style={{ fontWeight: 510 }}
+            onClick={() => setMenuOpen(false)}
+          >
+            <SettingsIcon size={16} />
+            Settings
+          </Link>
           <button
             onClick={handleSignOut}
             className="w-full flex items-center gap-3 py-2.5 text-[14px] text-[#d0d6e0] hover:text-[#f7f8f8] transition-colors"

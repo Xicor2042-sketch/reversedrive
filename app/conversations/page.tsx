@@ -38,8 +38,8 @@ export default async function ConversationsPage() {
     (conversations || []).map(async (conv: any) => {
       const otherId = conv.buyer_id === user.id ? conv.seller_id : conv.buyer_id
       const [{ data: otherProfile }, { data: lastMsg }] = await Promise.all([
-        supabase.from("profiles").select("display_name").eq("id", otherId).single(),
-        supabase.from("messages").select("content, sender_id, created_at").eq("conversation_id", conv.id).order("created_at", { ascending: false }).limit(1).single(),
+        supabase.from("public_profiles").select("display_name").eq("id", otherId).maybeSingle(),
+        supabase.from("messages").select("content, sender_id, created_at").eq("conversation_id", conv.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
       ])
 
       const yearStr = conv.car_requests?.year_min && conv.car_requests?.year_max
@@ -50,7 +50,7 @@ export default async function ConversationsPage() {
 
       return {
         id: conv.id,
-        otherName: otherProfile?.display_name?.split(" ")[0] || "User",
+        otherName: otherProfile?.display_name || "User",
         otherId,
         carInfo: `${yearStr}${conv.car_requests?.make} ${conv.car_requests?.model}`,
         carBudget: conv.car_requests?.max_budget,
