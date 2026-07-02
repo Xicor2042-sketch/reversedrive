@@ -52,6 +52,13 @@ export default async function LeadDetailPage({ params }: Props) {
 
   if (leadError || !lead) notFound()
 
+  // Count this seller's view for the buyer's "sellers viewed" radar stat.
+  // Fire-and-forget: the RPC (migrations/002) may not exist yet — ignore errors.
+  await supabase.rpc("increment_request_views", { p_request_id: id }).then(
+    () => undefined,
+    () => undefined
+  )
+
   // Check if this seller already unlocked this lead.
   const { data: existingUnlock } = await supabase
     .from("unlocked_leads")

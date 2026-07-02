@@ -42,21 +42,9 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-[#08090a] text-[#f7f8f8] flex flex-col items-center justify-center px-4 py-12 antialiased"
-      style={{ fontFeatureSettings: '"cv01", "ss03"' }}
-    >
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 h-[520px] w-[720px] rounded-full bg-[#5e6ad2]/12 blur-[140px]" />
-      </div>
-
-      <div className="relative w-full max-w-[400px]">
-        <Link href="/login" className="mb-8 block text-center">
-          <span className="text-xl tracking-tight" style={{ fontWeight: 510 }}>
-            Reverse<span className="text-[#7170ff]">Drive</span>
-          </span>
-        </Link>
-
+    <div className="text-[#f7f8f8] antialiased">
+      {/* The (auth) layout renders the page shell + logo */}
+      <div className="relative w-full max-w-[400px] mx-auto">
         <div className="rounded-[14px] border border-white/[0.06] bg-white/[0.02] p-8 shadow-[0_24px_80px_-20px_rgba(0,0,0,0.5)]">
           <Link
             href="/login"

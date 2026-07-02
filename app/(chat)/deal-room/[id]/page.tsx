@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { use, useState, useEffect, useRef } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -28,7 +28,10 @@ interface Message {
   created_at: string
 }
 
-export default function DealRoomPage({ params }: { params: { id: string } }) {
+export default function DealRoomPage({ params }: { params: Promise<{ id: string }> }) {
+  // Next 16: params is a Promise in client pages — reading conversationId directly
+  // yields undefined and every conversation looked "not found".
+  const { id: conversationId } = use(params)
   const supabase = createClient()
   const router = useRouter()
   const [messages, setMessages] = useState<Message[]>([])
@@ -61,7 +64,7 @@ export default function DealRoomPage({ params }: { params: { id: string } }) {
       const { data: conv, error: convError } = await supabase
         .from("conversations")
         .select("*")
-        .eq("id", params.id)
+        .eq("id", conversationId)
         .single()
 
       if (convError || !conv) {
@@ -71,14 +74,16 @@ export default function DealRoomPage({ params }: { params: { id: string } }) {
       }
 
       const otherId = conv.buyer_id === userData.user.id ? conv.seller_id : conv.buyer_id
+      // profiles RLS only allows reading your own row — cross-user names come
+      // from the public_profiles view (public columns only).
       const { data: otherProfile } = await supabase
-        .from("profiles")
-        .select("display_name, phone")
+        .from("public_profiles")
+        .select("display_name, dealer_business_name")
         .eq("id", otherId)
         .single()
 
-      if (otherProfile) {
-        setOtherName(otherProfile.display_name.split(" ")[0])
+      if (otherProfile?.display_name) {
+        setOtherName(otherProfile.dealer_business_name || otherProfile.display_name.split(" ")[0])
       }
 
       const { data: req } = await supabase
@@ -88,28 +93,28 @@ export default function DealRoomPage({ params }: { params: { id: string } }) {
         .single()
 
       if (req) {
-        const yearStr = req.year_min && req.year_max ? `${req.year_min}–${req.year_max}` : req.year_min ? `${req.year_min}+ ` : ""
+        const yearStr = req.year_min && req.year_max ? `${req.year_min}–${req.year_max} ` : req.year_min ? `${req.year_min}+ ` : ""
         setCarInfo(`${yearStr}${req.make} ${req.model}`)
       }
 
       const { data: msgs } = await supabase
         .from("messages")
         .select("*")
-        .eq("conversation_id", params.id)
+        .eq("conversation_id", conversationId)
         .order("created_at", { ascending: true })
 
       setMessages(msgs || [])
       setLoading(false)
 
       const channel = supabase
-        .channel(`messages:${params.id}`)
+        .channel(`messages:${conversationId}`)
         .on(
           "postgres_changes",
           {
             event: "INSERT",
             schema: "public",
             table: "messages",
-            filter: `conversation_id=eq.${params.id}`,
+            filter: `conversation_id=eq.${conversationId}`,
           },
           (payload) => {
             const incoming = payload.new as Message
@@ -141,7 +146,7 @@ export default function DealRoomPage({ params }: { params: { id: string } }) {
     const tempId = "temp_" + Date.now()
     const optimisticMsg: Message = {
       id: tempId,
-      conversation_id: params.id,
+      conversation_id: conversationId,
       sender_id: currentUserId,
       content: newMessage.trim(),
       attachment_url: null,
@@ -155,7 +160,7 @@ export default function DealRoomPage({ params }: { params: { id: string } }) {
     const { data, error } = await supabase
       .from("messages")
       .insert({
-        conversation_id: params.id,
+        conversation_id: conversationId,
         sender_id: currentUserId,
         content: messageText,
       })
