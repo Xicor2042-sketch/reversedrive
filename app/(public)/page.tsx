@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Reveal from "@/components/shared/reveal"
 import {
   ArrowRight,
   Target,
@@ -310,19 +311,20 @@ export default function LandingPage() {
       {/* ================= How It Works ================= */}
       <section id="how-it-works" className="py-24 px-6 scroll-mt-16">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
-              How it works
-            </h2>
-            <p className="mt-4 text-[#8a8f98] text-base">Three steps between you and your next car.</p>
-          </div>
+          <Reveal direction="blur">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
+                How it works
+              </h2>
+              <p className="mt-4 text-[#8a8f98] text-base">Three steps between you and your next car.</p>
+            </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, i) => (
+              <Reveal key={i} direction="up" delay={i * 130}>
               <div
-                key={i}
-                className="glass-card group relative rounded-[14px] p-6 hover:border-[#5e6ad2]/30 transition-all animate-slide-up"
-                style={{ animationDelay: `${i * 120}ms` }}
+                className="glass-card group relative h-full rounded-[14px] p-6 hover:border-[#5e6ad2]/30 transition-all"
               >
                 <div className="absolute inset-0 rounded-[14px] opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-b from-[#5e6ad2]/5 to-transparent pointer-events-none" />
                 <div className="relative">
@@ -341,6 +343,7 @@ export default function LandingPage() {
                   <p className="text-sm text-[#8a8f98] leading-relaxed">{feature.description}</p>
                 </div>
               </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -349,15 +352,18 @@ export default function LandingPage() {
       {/* ================= Comparison ================= */}
       <section className="py-24 px-6 border-t border-white/[0.05]">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
-              Why ReverseDrive
-            </h2>
-            <p className="mt-4 text-[#8a8f98] text-base">The traditional model is broken. We fixed it.</p>
-          </div>
+          <Reveal direction="blur">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
+                Why ReverseDrive
+              </h2>
+              <p className="mt-4 text-[#8a8f98] text-base">The traditional model is broken. We fixed it.</p>
+            </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-[14px] border border-white/[0.05] bg-white/[0.01] p-6">
+            <Reveal direction="left" className="h-full">
+            <div className="h-full rounded-[14px] border border-white/[0.05] bg-white/[0.01] p-6">
               <div className="flex items-center gap-2 mb-4 text-[#62666d]">
                 <TrendingDown size={18} />
                 <span className="text-sm" style={{ fontWeight: 510 }}>
@@ -379,8 +385,10 @@ export default function LandingPage() {
                 ))}
               </ul>
             </div>
+            </Reveal>
 
-            <div className="glass-card rounded-[14px] border-[#5e6ad2]/25 p-6" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 0 50px -18px rgba(94,106,210,0.45)" }}>
+            <Reveal direction="right" delay={120} className="h-full">
+            <div className="glass-card h-full rounded-[14px] border-[#5e6ad2]/25 p-6" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07), 0 0 50px -18px rgba(94,106,210,0.45)" }}>
               <div className="flex items-center gap-2 mb-4 text-[#7170ff]">
                 <Check size={18} />
                 <span className="text-sm" style={{ fontWeight: 510 }}>
@@ -402,6 +410,7 @@ export default function LandingPage() {
                 ))}
               </ul>
             </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -410,16 +419,19 @@ export default function LandingPage() {
       <section id="pricing" className="py-24 px-6 border-t border-white/[0.05] scroll-mt-16 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#5e6ad2]/6 rounded-full blur-[130px] pointer-events-none" />
         <div className="relative max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
-              Simple, honest pricing
-            </h2>
-            <p className="mt-4 text-[#8a8f98] text-base">No percentage of your car deal. Ever.</p>
-          </div>
+          <Reveal direction="blur">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
+                Simple, honest pricing
+              </h2>
+              <p className="mt-4 text-[#8a8f98] text-base">No percentage of your car deal. Ever.</p>
+            </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
             {/* Buyers */}
-            <div className="glass-card rounded-[16px] p-7 flex flex-col">
+            <Reveal direction="up" className="h-full">
+            <div className="glass-card h-full rounded-[16px] p-7 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-8 w-8 rounded-[8px] bg-[#10b981]/10 border border-[#10b981]/20 flex items-center justify-center">
                   <Car size={15} className="text-[#10b981]" />
@@ -445,9 +457,11 @@ export default function LandingPage() {
                 Post your first request
               </Link>
             </div>
+            </Reveal>
 
             {/* Sellers — highlighted */}
-            <div className="gradient-border glass-card rounded-[16px] p-7 flex flex-col relative" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 0 60px -15px rgba(94,106,210,0.5)" }}>
+            <Reveal direction="up" delay={130} className="h-full">
+            <div className="gradient-border glass-card h-full rounded-[16px] p-7 flex flex-col relative" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 0 60px -15px rgba(94,106,210,0.5)" }}>
               <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#5e6ad2] px-3 py-1 text-[10px] uppercase tracking-wider text-white" style={{ fontWeight: 510 }}>
                 Most popular
               </span>
@@ -477,9 +491,11 @@ export default function LandingPage() {
                 Start browsing leads <ArrowRight size={14} />
               </Link>
             </div>
+            </Reveal>
 
             {/* Dealers */}
-            <div className="glass-card rounded-[16px] p-7 flex flex-col">
+            <Reveal direction="up" delay={260} className="h-full">
+            <div className="glass-card h-full rounded-[16px] p-7 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-8 w-8 rounded-[8px] bg-[#f5a623]/10 border border-[#f5a623]/20 flex items-center justify-center">
                   <Building2 size={15} className="text-[#f5a623]" />
@@ -509,6 +525,7 @@ export default function LandingPage() {
                 Join the waitlist
               </Link>
             </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -516,18 +533,21 @@ export default function LandingPage() {
       {/* ================= FAQ ================= */}
       <section id="faq" className="py-24 px-6 border-t border-white/[0.05] scroll-mt-16">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
-              Questions, answered
-            </h2>
-            <p className="mt-4 text-[#8a8f98] text-base">
-              Everything people ask before posting their first request.
-            </p>
-          </div>
+          <Reveal direction="blur">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-4xl tracking-tight" style={{ fontWeight: 510, letterSpacing: "-0.03em" }}>
+                Questions, answered
+              </h2>
+              <p className="mt-4 text-[#8a8f98] text-base">
+                Everything people ask before posting their first request.
+              </p>
+            </div>
+          </Reveal>
 
           <div className="space-y-3">
             {faqs.map((f, i) => (
-              <details key={i} className="faq glass-card rounded-[12px] px-5 group">
+              <Reveal key={i} direction="up" delay={Math.min(i * 70, 280)}>
+              <details className="faq glass-card rounded-[12px] px-5 group">
                 <summary className="flex items-center justify-between gap-4 py-4">
                   <span className="text-[14px] text-[#f7f8f8]" style={{ fontWeight: 510 }}>
                     {f.q}
@@ -538,6 +558,7 @@ export default function LandingPage() {
                 </summary>
                 <p className="pb-5 text-[13px] leading-relaxed text-[#8a8f98]">{f.a}</p>
               </details>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -546,6 +567,7 @@ export default function LandingPage() {
       {/* ================= Final CTA ================= */}
       <section className="py-24 px-6 border-t border-white/[0.05]">
         <div className="max-w-3xl mx-auto">
+          <Reveal direction="scale">
           <div className="glass-card grain relative overflow-hidden rounded-[20px] px-8 py-16 text-center" style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), 0 0 80px -20px rgba(94,106,210,0.5)" }}>
             <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[420px] h-[220px] bg-[#5e6ad2]/20 rounded-full blur-[90px] pointer-events-none" />
             <div className="relative">
@@ -574,6 +596,7 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
     </div>

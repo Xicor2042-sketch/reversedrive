@@ -379,6 +379,34 @@ body {
   color: #f7f8f8;
 }
 
+/* ---- Scroll-driven reveals (components/shared/reveal.tsx) ----
+   Transitions (not keyframes) so leaving the viewport smoothly reverses
+   the animation when scrolling back up. */
+.reveal {
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal[data-revealed="false"] { opacity: 0; }
+.reveal[data-revealed="true"] { opacity: 1; transform: none; filter: none; }
+.reveal-up[data-revealed="false"] { transform: translateY(28px); }
+.reveal-down[data-revealed="false"] { transform: translateY(-28px); }
+.reveal-left[data-revealed="false"] { transform: translateX(-32px); }
+.reveal-right[data-revealed="false"] { transform: translateX(32px); }
+.reveal-scale[data-revealed="false"] { transform: scale(0.94); }
+.reveal-blur[data-revealed="false"] { filter: blur(8px); transform: translateY(12px); }
+
+/* ---- Global smoothness ---- */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { transition: none; }
+}
+button:not(:disabled):active { transform: scale(0.985); }
+button { transition-property: color, background-color, border-color, box-shadow, transform, opacity; transition-duration: 0.18s; transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+
 /* ---- Page enter: applied by app/template.tsx on every navigation ---- */
 @keyframes page-enter {
   from { opacity: 0; transform: translateY(6px); }

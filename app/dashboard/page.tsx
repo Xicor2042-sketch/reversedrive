@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import AppNavbar from "@/components/shared/app-navbar"
+import Reveal from "@/components/shared/reveal"
 import Link from "next/link"
 import {
   FileText,
@@ -105,10 +106,10 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
-            <StatCard label="Total Unlocks" value={totalUnlocks.toString()} icon={Unlock} />
-            <StatCard label="Total Spent" value={formatBudget(totalSpent)} icon={DollarSign} accent="green" />
-            <StatCard label="Active Leads" value={activeLeadsCount?.toString() || "0"} icon={Activity} accent="amber" />
-            <StatCard label="Messages" value={(conversations || []).length.toString()} icon={MessageSquare} />
+            <Reveal direction="up"><StatCard label="Total Unlocks" value={totalUnlocks.toString()} icon={Unlock} /></Reveal>
+            <Reveal direction="up" delay={90}><StatCard label="Total Spent" value={formatBudget(totalSpent)} icon={DollarSign} accent="green" /></Reveal>
+            <Reveal direction="up" delay={180}><StatCard label="Active Leads" value={activeLeadsCount?.toString() || "0"} icon={Activity} accent="amber" /></Reveal>
+            <Reveal direction="up" delay={270}><StatCard label="Messages" value={(conversations || []).length.toString()} icon={MessageSquare} /></Reveal>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -288,9 +289,9 @@ export default async function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
-          <StatCard label="Active Requests" value={activeRequests.length.toString()} icon={FileText} />
-          <StatCard label="Total Views" value={totalViews.toString()} icon={Eye} accent="amber" />
-          <StatCard label="Conversations" value={(conversations || []).length.toString()} icon={MessageSquare} accent="green" />
+          <Reveal direction="up"><StatCard label="Active Requests" value={activeRequests.length.toString()} icon={FileText} /></Reveal>
+          <Reveal direction="up" delay={90}><StatCard label="Total Views" value={totalViews.toString()} icon={Eye} accent="amber" /></Reveal>
+          <Reveal direction="up" delay={180}><StatCard label="Conversations" value={(conversations || []).length.toString()} icon={MessageSquare} accent="green" /></Reveal>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
