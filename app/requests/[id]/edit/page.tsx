@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Check, Car, DollarSign, MapPin, Loader2, AlertCircle, Fuel, Settings as SettingsIcon } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
@@ -61,8 +61,10 @@ function Wrapper() {
 
 function EditRequestPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const requestId = searchParams.get("id")
+  // The id lives in the route segment (/requests/[id]/edit), not the query
+  // string — reading searchParams here made the page deny every owner.
+  const params = useParams<{ id: string }>()
+  const requestId = params?.id ?? null
   const supabase = createClient()
 
   const [step, setStep] = useState(1)

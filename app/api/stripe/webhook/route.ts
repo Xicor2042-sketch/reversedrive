@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import Stripe from 'stripe'
 
 function getStripe() {
@@ -30,7 +30,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  const supabase = await createClient()
+  // Webhook calls carry no user session — the RLS-bound server client would
+  // reject every insert. Use the service-role admin client instead.
+  const supabase = createAdminClient()
 
   switch (event.type) {
     case 'checkout.session.completed': {

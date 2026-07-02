@@ -184,7 +184,7 @@ export default function LandingPage() {
           </div>
 
           {/* Right: product visual */}
-          <div className="relative hidden lg:block animate-fade-in" style={{ animationDelay: "250ms" }} aria-hidden="true">
+          <div className="relative hidden lg:block h-[480px] animate-fade-in" style={{ animationDelay: "250ms" }} aria-hidden="true">
             {/* Radar rings behind */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               {[0, 1, 2].map((i) => (
@@ -197,7 +197,7 @@ export default function LandingPage() {
             </div>
 
             {/* Request card */}
-            <div className="glass-card relative mx-auto w-[380px] rounded-[16px] p-5 z-10">
+            <div className="glass-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] rounded-[16px] p-5 z-10">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
                   <div className="h-9 w-9 rounded-full bg-gradient-to-br from-[#5e6ad2]/25 to-[#7170ff]/10 border border-white/[0.08] flex items-center justify-center">
@@ -250,8 +250,12 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Floating offer chips */}
-            <div className="glass-card animate-float-y absolute -left-4 top-6 z-20 rounded-[12px] px-4 py-3 w-[210px]">
+            {/* Floating offer chips — solid surfaces, pinned to the card's
+                edges so they read as layered cards instead of overlapping
+                the card's content */}
+            <div
+              className="animate-float-y absolute left-0 top-10 z-20 w-[200px] -rotate-3 rounded-[12px] border border-white/[0.1] bg-[#101114] px-4 py-3 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.07)]"
+            >
               <div className="text-[10px] uppercase tracking-wider text-[#62666d] mb-1" style={{ fontWeight: 510 }}>
                 Offer received
               </div>
@@ -264,7 +268,10 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="glass-card animate-float-y absolute -right-2 bottom-16 z-20 rounded-[12px] px-4 py-3 w-[230px]" style={{ animationDelay: "1.4s" }}>
+            <div
+              className="animate-float-y absolute right-0 bottom-12 z-20 w-[230px] rotate-2 rounded-[12px] border border-white/[0.1] bg-[#101114] px-4 py-3 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.07)]"
+              style={{ animationDelay: "1.4s" }}
+            >
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="h-6 w-6 rounded-full bg-gradient-to-br from-[#5e6ad2] to-[#7170ff] flex items-center justify-center text-[9px] text-white" style={{ fontWeight: 510 }}>
                   J
@@ -277,7 +284,10 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="glass-card animate-float-y absolute left-10 -bottom-4 z-20 rounded-full px-4 py-2 inline-flex items-center gap-2" style={{ animationDelay: "0.7s" }}>
+            <div
+              className="animate-float-y absolute bottom-2 left-1/2 z-20 -translate-x-1/2 inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/[0.1] bg-[#101114] px-4 py-2 shadow-[0_14px_30px_-10px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.07)]"
+              style={{ animationDelay: "0.7s" }}
+            >
               <Sparkles size={13} className="text-[#f5a623]" />
               <span className="text-[12px] text-[#d0d6e0]" style={{ fontWeight: 510 }}>7 competing offers in 6 hours</span>
             </div>

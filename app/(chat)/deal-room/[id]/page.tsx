@@ -7,13 +7,9 @@ import Link from "next/link"
 import {
   Send,
   ArrowLeft,
-  Flag,
-  MoreVertical,
-  Paperclip,
   ShieldCheck,
   AlertCircle,
   Loader2,
-  Phone,
   CheckCheck,
 } from "lucide-react"
 import { timeAgo } from "@/lib/utils/cn"
@@ -215,16 +211,9 @@ export default function DealRoomPage({ params }: { params: Promise<{ id: string 
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
-          <button className="hidden sm:flex p-2 rounded-[6px] hover:bg-white/[0.05] text-[#62666d] hover:text-[#f7f8f8] transition-colors items-center gap-1.5 text-[12px]">
-            <Phone size={13} /> Contact
-          </button>
-          <button className="p-2 rounded-[6px] hover:bg-white/[0.05] text-[#62666d] hover:text-[#f7f8f8] transition-colors">
-            <Flag size={15} />
-          </button>
-          <button className="p-2 rounded-[6px] hover:bg-white/[0.05] text-[#62666d] hover:text-[#f7f8f8] transition-colors">
-            <MoreVertical size={15} />
-          </button>
+        <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-[#62666d]" style={{ fontWeight: 510 }}>
+          <ShieldCheck size={13} className="text-[#10b981]" />
+          Private Deal Room
         </div>
       </div>
 
@@ -297,9 +286,6 @@ export default function DealRoomPage({ params }: { params: Promise<{ id: string 
       {/* Input */}
       <div className="border-t border-white/[0.05] bg-[#0f1011] px-4 sm:px-6 py-4 shrink-0">
         <div className="max-w-2xl mx-auto flex items-end gap-2">
-          <button className="p-2.5 rounded-[8px] hover:bg-white/[0.05] text-[#62666d] hover:text-[#f7f8f8] transition-colors shrink-0">
-            <Paperclip size={18} />
-          </button>
           <textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}

@@ -379,6 +379,15 @@ body {
   color: #f7f8f8;
 }
 
+/* ---- Page enter: applied by app/template.tsx on every navigation ---- */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-page-enter {
+  animation: page-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* ---- Film grain overlay: kills flat "template" surfaces ---- */
 .grain::after {
   content: "";

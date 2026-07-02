@@ -441,23 +441,27 @@ export default async function DashboardPage() {
   )
 }
 
-const STAT_ACCENTS: Record<string, { text: string; bg: string; border: string }> = {
-  indigo: { text: "text-[#7170ff]", bg: "bg-[#5e6ad2]/10", border: "border-[#5e6ad2]/20" },
-  green: { text: "text-[#10b981]", bg: "bg-[#10b981]/10", border: "border-[#10b981]/20" },
-  amber: { text: "text-[#f5a623]", bg: "bg-[#f5a623]/10", border: "border-[#f5a623]/20" },
+const STAT_ACCENTS: Record<string, { text: string; glow: string }> = {
+  indigo: { text: "text-[#7170ff]", glow: "rgba(113,112,255,0.14)" },
+  green: { text: "text-[#10b981]", glow: "rgba(16,185,129,0.12)" },
+  amber: { text: "text-[#f5a623]", glow: "rgba(245,166,35,0.10)" },
 }
 
 function StatCard({ label, value, icon: Icon, accent = "indigo" }: { label: string; value: string; icon: any; accent?: string }) {
   const a = STAT_ACCENTS[accent] ?? STAT_ACCENTS.indigo
   return (
-    <div className="glass-card rounded-[14px] p-5 transition-all hover:border-white/[0.14]">
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-[12px] text-[#8a8f98]" style={{ fontWeight: 510 }}>{label}</span>
-        <div className={`h-7 w-7 rounded-[8px] ${a.bg} border ${a.border} flex items-center justify-center`}>
-          <Icon size={14} className={a.text} />
+    <div className="glass-card relative overflow-hidden rounded-[14px] p-5 transition-all hover:border-white/[0.14]">
+      <div
+        className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-[36px]"
+        style={{ background: a.glow }}
+      />
+      <div className="relative">
+        <div className="flex items-center gap-1.5 mb-3 text-[#8a8f98]">
+          <Icon size={13} className={a.text} strokeWidth={1.75} />
+          <span className="text-[12px]" style={{ fontWeight: 510 }}>{label}</span>
         </div>
+        <div className="text-[28px] leading-none tracking-tight tabular-nums" style={{ fontWeight: 510, letterSpacing: "-0.02em" }}>{value}</div>
       </div>
-      <div className="text-[26px] leading-none tracking-tight tabular-nums" style={{ fontWeight: 510 }}>{value}</div>
     </div>
   )
 }

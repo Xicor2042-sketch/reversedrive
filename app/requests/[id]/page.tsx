@@ -133,7 +133,7 @@ export default async function RequestDetailPage({ params }: Props) {
                 )}
               </div>
               <div className="text-right shrink-0">
-                <div className="text-2xl text-[#10b981] tabular-nums" style={{ fontWeight: 510 }}>
+                <div className="text-xl sm:text-2xl text-[#10b981] tabular-nums" style={{ fontWeight: 510 }}>
                   {formatBudget(request.max_budget)}
                 </div>
                 <div className="text-[12px] text-[#62666d] mt-1">
@@ -405,10 +405,14 @@ export default async function RequestDetailPage({ params }: Props) {
 
 function StatCard({ icon: Icon, label, value }: { icon: any; label: string; value: string | number }) {
   return (
-    <div className="rounded-[10px] border border-white/[0.06] bg-white/[0.02] p-5">
-      <Icon size={16} className="text-[#62666d] mb-3" />
-      <div className="text-2xl tracking-tight tabular-nums" style={{ fontWeight: 510 }}>{value}</div>
-      <div className="text-[12px] text-[#62666d] mt-1">{label}</div>
+    <div className="glass-card min-w-0 rounded-[14px] p-5">
+      <div className="flex items-center gap-1.5 mb-3 text-[#8a8f98]">
+        <Icon size={13} className="text-[#7170ff]" strokeWidth={1.75} />
+        <span className="text-[12px] truncate" style={{ fontWeight: 510 }}>{label}</span>
+      </div>
+      <div className="text-[20px] sm:text-[24px] leading-none tracking-tight tabular-nums truncate" style={{ fontWeight: 510, letterSpacing: "-0.02em" }}>
+        {value}
+      </div>
     </div>
   )
 }
