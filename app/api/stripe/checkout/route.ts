@@ -36,6 +36,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Lead not available' }, { status: 404 })
     }
 
+    // Never sell the same lead to the same seller twice — if an unlock
+    // already exists, surface the Deal Room instead of charging again.
+    const { data: existingUnlock } = await supabase
+      .from('unlocked_leads')
+      .select('id')
+      .eq('request_id', requestId)
+      .eq('seller_id', user.id)
+      .maybeSingle()
+
+    if (existingUnlock) {
+      const { data: conv } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('request_id', requestId)
+        .eq('seller_id', user.id)
+        .maybeSingle()
+      return NextResponse.json(
+        { alreadyUnlocked: true, conversationId: conv?.id || null },
+        { status: 409 }
+      )
+    }
+
     if (DEMO_MODE) {
       const result = await handleLeadUnlock({
         sellerId: user.id,

@@ -41,6 +41,7 @@ export default function LeadUnlockButton({
         if (data.alreadyUnlocked) {
           setUnlocked(true)
           setLoading(false)
+          if (data.conversationId) router.push(`/deal-room/${data.conversationId}`)
           return
         }
         throw new Error(data.error || "Failed to start checkout")
