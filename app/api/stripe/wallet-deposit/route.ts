@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/wallet?success=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/stripe/wallet-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/wallet?canceled=true`,
       metadata: {
         buyer_id: user.id,

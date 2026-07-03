@@ -91,6 +91,17 @@ export async function handleLeadUnlock(payload: LeadUnlockMeta) {
 export async function handleWalletDeposit(payload: WalletDepositMeta) {
   const supabase = await createClient()
 
+  // Idempotency: the success redirect AND the webhook can both try to credit
+  // the same payment — the escrow record for this payment intent is the lock.
+  if (payload.stripePaymentIntentId) {
+    const { data: existing } = await supabase
+      .from("escrow_transactions")
+      .select("id")
+      .eq("stripe_payment_intent_id", payload.stripePaymentIntentId)
+      .maybeSingle()
+    if (existing) return { success: true, alreadyCredited: true }
+  }
+
   const { data: wallet } = await supabase
     .from("buyer_wallets")
     .select("id, balance")
